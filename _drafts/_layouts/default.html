@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+  {% include head.html %}
+
+  <body>
+
+    {% include header.html %}
+  <section class="body">
+    <div class="page-content">
+      <ul></ul>
+      <div class="wrapper">
+        {{ content }}
+      </div>
+    </div>
+  <script>
+     /**
+     * HACK: To keep the markdown tables styles after ingestion we need to wrap the ouput in <div class="table"></div>
+     */
+    var tables = document.getElementsByTagName("table");
+    var j = tables.length - 1;
+    while (j >= 0) {
+      var parent = tables.item(j).parentNode;
+      var table = tables.item(j);
+      var wrapper = document.createElement('div');
+      wrapper.className = 'table';
+      parent.insertBefore(wrapper, table);
+      wrapper.appendChild(table);
+      j--;
+    }
+  </script>
+  </section>
+    {% include footer.html %}
+
+  </body>
+
+</html>
