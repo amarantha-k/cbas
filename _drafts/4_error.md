@@ -5,18 +5,18 @@ title: Errors
 
 A SQL++ query can potentially result in one of the following errors:
 
- - syntax error,
- - identifier resolution error,
- - type error,
- - resource error.
+ - syntax error
+ - identifier resolution error
+ - type error
+ - resource error
 
-If the query processor runs into any error, it will
-terminate the ongoing processing of the query and
-immediately return an error message to the client.
+If the query processor runs into any error, it
+terminates the ongoing query processing and
+immediately returns an error message to the client.
 
 ## <a id="Syntax_errors">Syntax Errors</a>
-An valid SQL++ query must satisfy the SQL++ grammar rules.
-Otherwise, a syntax error will be raised.
+A valid SQL++ query must satisfy the SQL++ grammar rules.
+Otherwise, a syntax error is displayed.
 
 ##### Example
 
@@ -24,7 +24,7 @@ Otherwise, a syntax error will be raised.
     FROM GleambookUsers user
 
 Since the ending semi-colon is mandatory for any SQL++ query,
-we will get a syntax error as follows:
+we will get the following syntax error:
 
     Error: Syntax error: In line 2 >>FROM GleambookUsers user<< Encountered <EOF> at column 24.
     ==> FROM GleambookUsers user
@@ -35,8 +35,8 @@ we will get a syntax error as follows:
     FROM GleambookUsers user
     WHERE type="advertiser";
 
-Since "type" a [reserved keyword](#Reserved_keywords) in the SQL++ parser,
-we will get a syntax error as follows:
+Since "type" is a [reserved keyword](#Reserved_keywords) in the SQL++ parser,
+we will get the following syntax error:
 
     Error: Syntax error: In line 3 >>WHERE type="advertiser";<< Encountered 'type' "type" at column 7.
     ==> WHERE type="advertiser";
@@ -51,8 +51,8 @@ cannot be successfully resolved as a valid field access.
     SELECT *
     FROM GleambookUser user;
 
-Assume we have a typo in "GleambookUser" which misses the ending "s",
-we will get an identifier resolution error as follows:
+Let's assume we have a spelling mistake in the "GleambookUser" and we missed the ending "s",
+we will get the following identifier resolution error:
 
     Error: Cannot find dataset GleambookUser in dataverse Default nor an alias with name GleambookUser!
 
@@ -79,7 +79,7 @@ it processes does not satisfy the type requirement.
     abs("123");
 
 Since function `abs` can only process numeric input values,
-we will get a type error as follows:
+we will get the following type error:
 
     Error: Arithmetic operations are not implemented for string
 
@@ -87,15 +87,13 @@ we will get a type error as follows:
 ## <a id="Resource_errors">Resource Errors</a>
 A query can potentially exhaust system resources, such
 as the number of open files and disk spaces.
-For instance, the following two resource errors could be potentially
-be seen when running the system:
+For instance, the following two resource errors can be potentially seen when running the system:
 
     Error: no space left on device
     Error: too many open files
 
-The "no space left on device" issue usually can be fixed by
-cleaning up disk spaces and reserving more disk spaces for the system.
-The "too many open files" issue usually can be fixed by a system
-administrator, following the instructions
-[here](https://easyengine.io/tutorials/linux/increase-open-files-limit/).
-
+The "no space left on device" issue can be fixed by
+cleaning up the disk space and reserving more disk space for the system.
+The "too many open files" issue can be fixed by a system
+administrator, using
+[these](https://easyengine.io/tutorials/linux/increase-open-files-limit/) instructions.

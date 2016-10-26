@@ -1,52 +1,52 @@
 ---
 layout: default
-title: CBAS 101 - Pairing Beers with Seabass
+title: Tutorial - Pairing Beers with Analytics
 ---
 
-## Welcome to the CBAS DP! ##
-This document introduces the main features of the new Couchbase Analytics Service (CBAS, pronounced like "seabass") by example.
+## Welcome to the Analytics DP! ##
+This document introduces the main features of the new Couchbase Analytics through examples.
 Since few things in life are more important than choosing the right beer to pair with one's main dish,
-this example explores the pairing of seabass and beers.
-More specifically, it shows how to create a set of CBAS shadow datasets based on the Couchbase beer-sample bucket,
-together with a set of illustrative queries, as a quick way to introduce you to the new "CBAS user experience".
+this example explores the pairing of Analytics and beers.
+More specifically, it shows how to create a set of Analytics shadow datasets based on the Couchbase beer-sample bucket,
+together with a set of illustrative queries, as a quick way to introduce you to the new "Analytics user experience".
 The complete set of steps to create and connect the sample datasets, along with a collection of runnable SQL++
 queries and their expected results, are included.
 
 This document assumes that you are comfortable using Couchbase Server and know how to query it using N1QL.
-It assumes that you already have a running instance of Couchbase Server 4.5 or later on your favorite machine
+It assumes that you already have a running instance of Couchbase Server 4.5 on your favorite machine
 and that you know how to interact with it using the Couchbase Console.
 It also assumes that you have the Couchbase beer-sample example data bucket installed on that system.
-Finally, this document assumes that you have already downloaded and successfully installed the CBAS DP
-and that you have verified that it is up and running (e.g., by issuing a simple SQL++ test query like:
+Finally, this document assumes that you have already downloaded and successfully installed the Analytics DP
+and that you have verified that it is up and running (for example, by issuing a simple SQL++ test query like:
 
     "Let there be beer!";
 
-As you read through this document, you should try each step for yourself on your own CBAS instance.
-You can use whatever your favorite CBAS interface is to do this (e.g., cbq or curl);
+As you read through this document, you should try each step for yourself on your own Analytics instance.
+You can use whatever your favorite Analytics interface is to do this (for example, cbq or curl);
 Once you have reached the end of this tutorial, you will be armed and dangerous,
-having all the basic CBAS knowledge that you'll need to start down the path of exploring the power of NoSQL data analytics.
+having all the basic Analytics knowledge that you'll need to start down the path of exploring the power of NoSQL data analytics.
 As you have already heard by now, this will hopefully prove to be a freeing experience:
 CBAS SQL++ queries never touch your Couchbase data servers, running instead (in parallel) on real-time shadow copies of your data.
 As a result, you will find yourself in a world where you can "ask the system anything!" -- you won't need to worry about
 slowing down the front-end machines with complex queries, you won't have to create covering indexes to ask queries,
-and the CBAS query language (SQL++) won't try to keep you from asking queries that would be too perforamance-costly
+and the Analytics query language (SQL++) won't try to keep you from asking queries that would be too perforamance-costly
 to ask against your front-end data.
 
-## The World of Data in CBAS ##
-In this section you will learn about the CBAS world model for data.
+## The World of Data in Analytics ##
+In this section you will learn about the Analytics world model for data.
 
-### Organizing Data in CBAS ###
+### Organizing Data in Analytics ###
 
-The top-level organizing concept in the CBAS data world is the _dataverse_.
+The top-level organizing concept in the Analytics data world is the _dataverse_.
 A dataverse---short for "data universe"---is a place (similar to a database or a schema in a relational DBMS)
-in which to create and manage data types, datasets, and other artifacts for a given CBAS application.
-In the CBAS DP, all of the data types that you might need come pre-installed, and the kind of datasets
+in which to create and manage data types, datasets, and other artifacts for a given Analytics application.
+In the Analytics DP, all of the data types that you might need come pre-installed, and the kind of datasets
 that you will create are called "shadow datasets".
 These datasets are containers -- collections of JSON objects -- that contain real-time shadow copies of selected front-end data.
-When you start using a CBAS instance for the first time, it starts out "empty";
-it contains no data other than the CBAS system catalogs (which live in a special dataverse called the "Metadata" dataverse).
+When you start using a Analytics instance for the first time, it starts out "empty";
+it contains no data other than the Analytics system catalogs (which live in a special dataverse called the "Metadata" dataverse).
 To store your data in CBAS, you can create a dataverse and then use it to hold the _datasets_ for your own data.
-However, you also get a "default" dataverse for free, and CBAS will just use that if you don't create a new one.
+However, you also get a "default" dataverse for free, and Analytics will just use that if you don't create a new one.
 Let's put these concepts to work.
 
 Our sample scenario here involves information about beers and their breweries.
@@ -59,15 +59,17 @@ where all of the beer and brewery information resides, and ask CBAS to shadow th
     CREATE SHADOW DATASET breweries ON beerBucket WHERE `type` = "brewery";
     CREATE SHADOW DATASET beers ON beerBucket WHERE `type` = "beer";
 
-The first statement (_CREATE BUCKET_) gives CBAS the information needed to access the data of interest from Couchbase Server.
-The next two statements (_CREATE SHADOW DATASET_) create the target datasets in CBAS for the information of interest.
+The first statement (_CREATE BUCKET_) gives Analytics the information needed to access the data of interest from Couchbase Server.
+The next two statements (_CREATE SHADOW DATASET_) create the target datasets in Analytics for the information of interest.
 Notice how _WHERE_ clauses are utilized to direct beer-related data into separate, type-specific datasets for easier querying.
-Each of these datasets will be hash-partitioned (sharded) across all of the nodes running instances of the CBAS service.
+Each of these datasets will be hash-partitioned (sharded) across all of the nodes running instances of the Analytics service.
 To initiate the shadowing relationship of these datasets to the front-end data, one more step is needed, namely:
 
     CONNECT BUCKET beerBucket WITH {"password":""};
 
-Once you have run this statement, CBAS will begin making its copy of the front-end data and continuously monitor it for changes.
+> **Note:** The Developer Preview saves the username and password for Couchbase Server as plain text in the clear.
+
+Once you have run this statement, Analytics will begin making its copy of the front-end data and continuously monitor it for changes.
 
 ### What's Lurking in the Shadows? ###
 
@@ -82,7 +84,7 @@ The following SQL++ _SELECT_ statements are one good way to accomplish that:
     SELECT VALUE COUNT(*) FROM beers;
     SELECT * FROM beers ORDER BY name LIMIT 1;
 
-The first statement above looks in the CBAS system catalogs for datasets that have been created in the "Default" dataverse.
+The first statement above looks in the Analytics system catalogs for datasets that have been created in the "Default" dataverse.
 At this point, assuming that you are just getting started, you will see only your two new shadow datasets:
 
     [ {
@@ -181,7 +183,7 @@ At this point, assuming that you are just getting started, you will see only you
         "PendingOp": 0
     } ]
 
-The next two pairs of SQL++ statements above ask CBAS to give you record counts and a sample record from each of the shadow datasets.
+The next two pairs of SQL++ statements above ask Analytics to give you record counts and a sample record from each of the shadow datasets.
 The four resulting return values should be as follows:
 
     [ 1412 ]
@@ -228,26 +230,26 @@ The four resulting return values should be as follows:
     } ]
 
 
-## SQL++: Querying Your CBAS Data ##
+## SQL++: Querying Your Analytics Data ##
 
-Congratulations! You now have your Couchbase Server beer-related data being shadowed in CBAS.
+Congratulations! You now have your Couchbase Server beer-related data being shadowed in Analytics.
 You can start running ad hoc queries against your breweries and beers datasets.
 
-The query language that CBAS supports is called SQL++, and it is a
+The query language that Analytics supports is called SQL++, and it is a
 SQL-inspired language designed for working with semistructured data.
 SQL++ has much in common with SQL, but there are differences due to the data model that SQL++ is designed to serve.
 SQL was designed in the 1970's to interact with the flat, schema-ified world of relational databases.
 SQL++ is designed for the nested, schema-less (or schema-optional, in CBAS) world of NoSQL systems.
-SQL++ offers a mostly familar paradigm for experienced SQL users to use to query and manipulate data in CBAS.
+SQL++ offers a mostly familiar paradigm for experienced SQL users to use to query and manipulate data in Analytics.
 SQL++ is also related to N1QL, the current query language in Couchbase Server.
 SQL++ is really a functional superset of N1QL that is a bit closer to SQL,
-and the differences between N1QL and SQL++ will eventually disappear (i.e., SQL++ is really the future of N1QL).
+and the differences between N1QL and SQL++ will eventually disappear (that is, SQL++ is really the future of N1QL).
 
 In this section we introduce SQL++ via a set of example queries, along with their expected results,
 based on the data above, to help you get started.
 Many of the most important features of SQL++ are presented in this set of representative queries.
-You can find more details in the document on the [Data Model](datamodel.html) of CBAS,
-in the CBAS [SQL++ Reference Manual](manual-sqlpp.html),
+You can find more details in the document on the [Data Model](datamodel.html) of Analytics,
+in the Analytics [SQL++ Reference Manual](manual-sqlpp.html),
 and a complete list of the built-in functions is available in the [SQL++ Functions](functions-sqlpp.html) document.
 
 SQL++ is a highly composable expression language.
@@ -411,17 +413,17 @@ The expected result for this query is as follows:
         "city": "Anchorage",
         "phone": "1-907-344-1179",
         "name": "Midnight Sun Brewing Co.",
-        "description": "Since firing up its brew kettle in 1995, Midnight Sun Brewing Company 
-        has become a serious yet creative force on the American brewing front. From concept to 
-        glass, Midnight Sun relies on an art marries science approach, mixing tradition with 
-        innovation, to design and craft bold, distinctive beers for Alaska...and beyond. 
-        We at Midnight Sun find inspiration in the untamed spirit and rugged beauty of 
-        the Last Frontier and develop unique beers with equally appealing names and labels. 
-        But the company's true focus remains in its dedication to producing consistently 
-        high-quality beers that provide satisfying refreshment in all seasons... for Alaskans 
-        and visitors alike.  From our Pacific Northwest locale, we offer our wonderful beers 
-        on draft throughout Alaska and in 22-ounce bottles throughout Alaska and Oregon. 
-        We invite you to visit our hardworking, little brewery in South Anchorage every 
+        "description": "Since firing up its brew kettle in 1995, Midnight Sun Brewing Company
+        has become a serious yet creative force on the American brewing front. From concept to
+        glass, Midnight Sun relies on an art marries science approach, mixing tradition with
+        innovation, to design and craft bold, distinctive beers for Alaska...and beyond.
+        We at Midnight Sun find inspiration in the untamed spirit and rugged beauty of
+        the Last Frontier and develop unique beers with equally appealing names and labels.
+        But the company's true focus remains in its dedication to producing consistently
+        high-quality beers that provide satisfying refreshment in all seasons... for Alaskans
+        and visitors alike.  From our Pacific Northwest locale, we offer our wonderful beers
+        on draft throughout Alaska and in 22-ounce bottles throughout Alaska and Oregon.
+        We invite you to visit our hardworking, little brewery in South Anchorage every
         chance you get!",
         "state": "Alaska",
         "type": "brewery",
@@ -460,10 +462,10 @@ The expected result for this query is as follows:
         "city": "Fox",
         "phone": "(907) 452-2739",
         "name": "Silver Gulch Brewing Company",
-        "description": "Silver Gulch Brewing and Bottling Co. has been in operation since 
-        February 1998 in the small mining community of Fox, Alaska, located about 10 miles 
-        north of Fairbanks on the Steese Highway. Silver Gulch Brewing grew from brewmaster 
-        Glenn Brady's home-brewing efforts in 5-gallon batches to its current capacity of 
+        "description": "Silver Gulch Brewing and Bottling Co. has been in operation since
+        February 1998 in the small mining community of Fox, Alaska, located about 10 miles
+        north of Fairbanks on the Steese Highway. Silver Gulch Brewing grew from brewmaster
+        Glenn Brady's home-brewing efforts in 5-gallon batches to its current capacity of
         24-barrel (750 gallon) batches.",
         "state": "Alaska",
         "type": "brewery",
@@ -595,11 +597,11 @@ The expected result of this version of the SQL++ join query for our sample data 
             "abv": 6.0,
             "name": "(512) ALT",
             "upc": 0,
-            "description": "(512) ALT is a German-style amber ale that is fermented cooler than 
-            typical ales and cold conditioned like a lager. ALT means “old” in German and refers 
-            to a beer style made using ale yeast after many German brewers had switched to newly 
-            discovered lager yeast. This ale has a very smooth, yet pronounced, hop bitterness 
-            with a malty backbone and a characteristic German yeast character. Made with 98% Organic 2-row 
+            "description": "(512) ALT is a German-style amber ale that is fermented cooler than
+            typical ales and cold conditioned like a lager. ALT means “old” in German and refers
+            to a beer style made using ale yeast after many German brewers had switched to newly
+            discovered lager yeast. This ale has a very smooth, yet pronounced, hop bitterness
+            with a malty backbone and a characteristic German yeast character. Made with 98% Organic 2-row
             and Munch malts and US noble hops.",
             "style": "German-Style Brown Ale\/Altbier",
             "brewery_id": "512_brewing_company",
@@ -624,8 +626,8 @@ The expected result of this version of the SQL++ join query for our sample data 
             "city": "Austin",
             "phone": "512.707.2337",
             "name": "(512) Brewing Company",
-            "description": "(512) Brewing Company is a microbrewery located in the heart of 
-            Austin that brews for the community using as many local, domestic and organic 
+            "description": "(512) Brewing Company is a microbrewery located in the heart of
+            Austin that brews for the community using as many local, domestic and organic
             ingredients as possible.",
             "state": "Texas",
             "type": "brewery",
@@ -636,11 +638,11 @@ The expected result of this version of the SQL++ join query for our sample data 
             "abv": 7.6,
             "name": "(512) Bruin",
             "upc": 0,
-            "description": "At once cuddly and ferocious, (512) BRUIN combines a smooth, 
-            rich maltiness and mahogany color with a solid hop backbone and stealthy 
-            7.6% alcohol. Made with Organic 2 Row and Munich malts, plus Chocolate and 
-            Crystal malts, domestic hops, and a touch of molasses, this brew has notes of 
-            raisins, dark sugars, and cocoa, and pairs perfectly with food and the crisp 
+            "description": "At once cuddly and ferocious, (512) BRUIN combines a smooth,
+            rich maltiness and mahogany color with a solid hop backbone and stealthy
+            7.6% alcohol. Made with Organic 2 Row and Munich malts, plus Chocolate and
+            Crystal malts, domestic hops, and a touch of molasses, this brew has notes of
+            raisins, dark sugars, and cocoa, and pairs perfectly with food and the crisp
             fall air.",
             "style": "American-Style Brown Ale",
             "brewery_id": "512_brewing_company",
@@ -665,8 +667,8 @@ The expected result of this version of the SQL++ join query for our sample data 
             "city": "Austin",
             "phone": "512.707.2337",
             "name": "(512) Brewing Company",
-            "description": "(512) Brewing Company is a microbrewery located in the heart of 
-            Austin that brews for the community using as many local, domestic and organic 
+            "description": "(512) Brewing Company is a microbrewery located in the heart of
+            Austin that brews for the community using as many local, domestic and organic
             ingredients as possible.",
             "state": "Texas",
             "type": "brewery",
@@ -678,8 +680,8 @@ The expected result of this version of the SQL++ join query for our sample data 
             "name": "(512) IPA",
             "upc": 0,
             "description": "(512) India Pale Ale is a big, aggressively dry-hopped American
-             IPA with smooth bitterness (~65 IBU) balanced by medium maltiness. Organic 
-             2-row malted barley, loads of hops, and great Austin water create an ale with 
+             IPA with smooth bitterness (~65 IBU) balanced by medium maltiness. Organic
+             2-row malted barley, loads of hops, and great Austin water create an ale with
              apricot and vanilla aromatics that lure you in for more.",
             "style": "American-Style India Pale Ale",
             "brewery_id": "512_brewing_company",
@@ -704,8 +706,8 @@ The expected result of this version of the SQL++ join query for our sample data 
             "city": "Austin",
             "phone": "512.707.2337",
             "name": "(512) Brewing Company",
-            "description": "(512) Brewing Company is a microbrewery located in the heart 
-            of Austin that brews for the community using as many local, domestic and 
+            "description": "(512) Brewing Company is a microbrewery located in the heart
+            of Austin that brews for the community using as many local, domestic and
             organic ingredients as possible.",
             "state": "Texas",
             "type": "brewery",
@@ -716,8 +718,8 @@ The expected result of this version of the SQL++ join query for our sample data 
             "abv": 5.8,
             "name": "(512) Pale",
             "upc": 0,
-            "description": "With Organic 2-row malted barley, (512) Pale is a copper 
-            colored American Pale Ale that balances earthy hop bitterness and hop flavor 
+            "description": "With Organic 2-row malted barley, (512) Pale is a copper
+            colored American Pale Ale that balances earthy hop bitterness and hop flavor
             with a rich malty body.",
             "style": "American-Style Pale Ale",
             "brewery_id": "512_brewing_company",
@@ -742,8 +744,8 @@ The expected result of this version of the SQL++ join query for our sample data 
             "city": "Austin",
             "phone": "512.707.2337",
             "name": "(512) Brewing Company",
-            "description": "(512) Brewing Company is a microbrewery located in the heart of 
-            Austin that brews for the community using as many local, domestic and organic 
+            "description": "(512) Brewing Company is a microbrewery located in the heart of
+            Austin that brews for the community using as many local, domestic and organic
             ingredients as possible.",
             "state": "Texas",
             "type": "brewery",
@@ -754,9 +756,9 @@ The expected result of this version of the SQL++ join query for our sample data 
             "abv": 6.8,
             "name": "(512) Pecan Porter",
             "upc": 0,
-            "description": "Nearly black in color, (512) Pecan Porter is made with Organic 
-            US 2-row and Crystal malts along with Baird’s Chocolate and Black malts. Its full 
-            body and malty sweetness are balanced with subtle pecan aroma and flavor from 
+            "description": "Nearly black in color, (512) Pecan Porter is made with Organic
+            US 2-row and Crystal malts along with Baird’s Chocolate and Black malts. Its full
+            body and malty sweetness are balanced with subtle pecan aroma and flavor from
             locally grown pecans. Yet another true Austin original!",
             "style": "Porter",
             "brewery_id": "512_brewing_company",
@@ -781,8 +783,8 @@ The expected result of this version of the SQL++ join query for our sample data 
             "city": "Austin",
             "phone": "512.707.2337",
             "name": "(512) Brewing Company",
-            "description": "(512) Brewing Company is a microbrewery located in the heart 
-            of Austin that brews for the community using as many local, domestic and 
+            "description": "(512) Brewing Company is a microbrewery located in the heart
+            of Austin that brews for the community using as many local, domestic and
             organic ingredients as possible.",
             "state": "Texas",
             "type": "brewery",
@@ -793,13 +795,13 @@ The expected result of this version of the SQL++ join query for our sample data 
             "abv": 8.2,
             "name": "(512) Whiskey Barrel Aged Double Pecan Porter",
             "upc": 0,
-            "description": "Our first barrel project is in kegs and on it’s way to beer bars 
-            around Austin. This is a bigger, bolder version of our mainstay Pecan Porter, 
-            with a richer finish. Two months on recently emptied Jack Daniels select barrels 
-            imparted a wonderful vanilla character from the oak and a pleasant amount of 
-            whiskey nose and flavor. All in all, I’m really proud of the hard work and effort 
-            put into this beer. Our first attempt at brewing it and our first attempt at 
-            managing barrels has paid off for everyone! Seek out this beer, but don’t put it off. 
+            "description": "Our first barrel project is in kegs and on it’s way to beer bars
+            around Austin. This is a bigger, bolder version of our mainstay Pecan Porter,
+            with a richer finish. Two months on recently emptied Jack Daniels select barrels
+            imparted a wonderful vanilla character from the oak and a pleasant amount of
+            whiskey nose and flavor. All in all, I’m really proud of the hard work and effort
+            put into this beer. Our first attempt at brewing it and our first attempt at
+            managing barrels has paid off for everyone! Seek out this beer, but don’t put it off.
             There is a very limited number of kegs available and it might go fast…",
             "style": "Porter",
             "brewery_id": "512_brewing_company",
@@ -824,7 +826,7 @@ The expected result of this version of the SQL++ join query for our sample data 
             "city": "Austin",
             "phone": "512.707.2337",
             "name": "(512) Brewing Company",
-            "description": "(512) Brewing Company is a microbrewery located in the heart of 
+            "description": "(512) Brewing Company is a microbrewery located in the heart of
             Austin that brews for the community using as many local, domestic and organic ingredients as possible.",
             "state": "Texas",
             "type": "brewery",
@@ -835,9 +837,9 @@ The expected result of this version of the SQL++ join query for our sample data 
             "abv": 5.2,
             "name": "(512) Wit",
             "upc": 0,
-            "description": "Made in the style of the Belgian wheat beers that are so refreshing, 
-            (512) Wit is a hazy ale spiced with coriander and domestic grapefruit peel. 
-            50% US Organic 2-row malted barley and 50% US unmalted wheat and oats make this 
+            "description": "Made in the style of the Belgian wheat beers that are so refreshing,
+            (512) Wit is a hazy ale spiced with coriander and domestic grapefruit peel.
+            50% US Organic 2-row malted barley and 50% US unmalted wheat and oats make this
             a light, crisp ale well suited for any occasion.",
             "style": "Belgian-Style White",
             "brewery_id": "512_brewing_company",
@@ -862,8 +864,8 @@ The expected result of this version of the SQL++ join query for our sample data 
             "city": "Austin",
             "phone": "512.707.2337",
             "name": "(512) Brewing Company",
-            "description": "(512) Brewing Company is a microbrewery located in the heart of 
-            Austin that brews for the community using as many local, domestic and organic 
+            "description": "(512) Brewing Company is a microbrewery located in the heart of
+            Austin that brews for the community using as many local, domestic and organic
             ingredients as possible.",
             "state": "Texas",
             "type": "brewery",
@@ -874,11 +876,11 @@ The expected result of this version of the SQL++ join query for our sample data 
             "abv": 8.0,
             "name": "One",
             "upc": 0,
-            "description": "Our first anniversary release is a Belgian-style strong ale 
-            that is amber in color, with a light to medium body. Subtle malt sweetness is 
-            balanced with noticeable hop flavor, light raisin and mildly spicy, cake-like 
-            flavors, and is finished with local wildflower honey aromas. Made with 80% Organic 
-            Malted Barley, Belgian Specialty grains, Forbidden Fruit yeast, domestic hops and 
+            "description": "Our first anniversary release is a Belgian-style strong ale
+            that is amber in color, with a light to medium body. Subtle malt sweetness is
+            balanced with noticeable hop flavor, light raisin and mildly spicy, cake-like
+            flavors, and is finished with local wildflower honey aromas. Made with 80% Organic
+            Malted Barley, Belgian Specialty grains, Forbidden Fruit yeast, domestic hops and
             Round Rock local wildflower honey, this beer is deceptively high in alcohol. ",
             "style": "Belgian-Style Pale Strong Ale",
             "brewery_id": "512_brewing_company",
@@ -903,8 +905,8 @@ The expected result of this version of the SQL++ join query for our sample data 
             "city": "Austin",
             "phone": "512.707.2337",
             "name": "(512) Brewing Company",
-            "description": "(512) Brewing Company is a microbrewery located in the heart 
-            of Austin that brews for the community using as many local, domestic and organic 
+            "description": "(512) Brewing Company is a microbrewery located in the heart
+            of Austin that brews for the community using as many local, domestic and organic
             ingredients as possible.",
             "state": "Texas",
             "type": "brewery",
@@ -915,9 +917,9 @@ The expected result of this version of the SQL++ join query for our sample data 
             "abv": 7.2,
             "name": "21A IPA",
             "upc": 0,
-            "description": "Deep golden color. Citrus and piney hop aromas. Assertive malt 
-            backbone supporting the overwhelming bitterness. Dry hopped in the fermenter 
-            with four types of hops giving an explosive hop aroma. Many refer to this IPA as 
+            "description": "Deep golden color. Citrus and piney hop aromas. Assertive malt
+            backbone supporting the overwhelming bitterness. Dry hopped in the fermenter
+            with four types of hops giving an explosive hop aroma. Many refer to this IPA as
             Nectar of the Gods. Judge for yourself. Now Available in Cans!",
             "style": "American-Style India Pale Ale",
             "brewery_id": "21st_amendment_brewery_cafe",
@@ -1344,7 +1346,7 @@ This version of the query uses an explicit record constructor to build each resu
 expressions themselves---so in the most general case, even the resulting field names can be computed as part of the query,
 making SQL++ a very powerful tool for slicing and dicing semistructured data.)
 
-(It is worth knowing, with respect to influencing CBAS's query evaluation,
+(It is worth knowing, with respect to influencing Analytics's query evaluation,
 that _FROM_ and _JOIN_ clauses---*a.k.a.* joins--- are currently evaluated in order,
 with the "left" clause probing the data of the "right" clause.)
 
@@ -1352,14 +1354,14 @@ with the "left" clause probing the data of the "right" clause.)
 In order to support joins between tables with missing/dangling join tuples, the designers of SQL ended
 up shoe-horning a subset of the relational algebra into SQL's _FROM_ clause syntax---and providing a
 variety of join types there for users to choose from (which SQL++ supports for SQL compatibility).
-Left outer joins are particularly important in SQL, e.g., to print a summary of customers and orders,
+Left outer joins are particularly important in SQL, for example, to print a summary of customers and orders,
 grouped by customer, without omitting those customers who haven't placed any orders yet.
 
 The SQL++ language supports nesting, both of queries and of query results,
 and the combination allows for a cleaner and more natural approach to such queries.
 As an example, supposed we wanted, for each brewery, to produce a record that contains
 the brewery name along with a list of all of the brewery's offered beer names and alcohol percentages.
-In the flat (a.k.a. 1NF) world of SQL, approximating this query would involve a left outer join between
+In the flat (also known as 1NF) world of SQL, approximating this query would involve a left outer join between
 breweries and beers, ordered by brewery, with the brewery name being repeated along side each beer's information.
 In the richer ("NoSQL") world of SQL++, this use case can be handled more naturally as follows:
 
@@ -1375,7 +1377,7 @@ for each brewery, it constructs a result record containing a "brewer" field with
 field with a nested collection of records containing the beer name and alcohol percentage for each of the brewery's beers.
 The nested collection field for each brewery is created using a correlated subquery.
 (Note: While it looks like nested loops could be involved in computing the result,
-CBAS recogizes the equivalence of such a query to an outerjoin, so it will use an
+Analytics recognizes the equivalence of such a query to an outerjoin, so it will use an
 efficient parallel join strategy when actually computing the query's result.)
 
 Here is this example query's expected output:
@@ -1511,7 +1513,7 @@ Notice that since the brewery named "Abbey Wright Brewing/Valley Inn" offers no 
 
 ### Query 5 - Theta Join ###
 Not all joins are expressible as equijoins and computable using equijoin-oriented algorithms.
-The join predicates for some use cases involve predicates with functions; CBAS supports the
+The join predicates for some use cases involve predicates with functions; Analytics supports the
 expression of such queries and will still evaluate them as best it can using nested loop based
 techniques (and broadcast joins in the parallel case).
 
@@ -2003,7 +2005,7 @@ The expected result in this case is:
     } ]
 
 ### Query 8 - Simple Aggregation ###
-Like SQL, the SQL++ language of CBAS provides support for computing aggregates over large amounts of data.
+Like SQL, the SQL++ language of Analytics provides support for computing aggregates over large amounts of data.
 As a very simple example, the following SQL++ query computes the total number of beers in a SQL-like way:
 
     SELECT COUNT(*) AS num_beers FROM beers;
@@ -2047,7 +2049,7 @@ The _FROM_ clause incrementally binds the variable _br_ to beers, and the _GROUP
 the beers by their associated brewery id.
 Unlike SQL, where data is tabular---flat---the data model underlying SQL++ allows for nesting.
 Thus, due to the _GROUP BY_ clause, the _SELECT_ clause in this query sees a sequence of _br_ groups,
-with each such group having an associated _brewery_id_ variable value (i.e., the producing brewery's id).
+with each such group having an associated _brewery_id_ variable value (that is the producing brewery's id).
 In the context of the _SELECT_ clause, _brewery_id_ is bound to the brewery's id and _br_
 is now re-bound (due to grouping) to the _set_ of beers issued by that brewery.
 The _SELECT_ clause yields a result record containing the brewery's id and the count of the items
@@ -2091,7 +2093,7 @@ Here is the expected result for this query over the sample data:
         "brewery_id": "southern_tier_brewing_co"
     } ]
 
-CBAS has multiple evaluation strategies available for processing grouped aggregate queries.
+Analytics has multiple evaluation strategies available for processing grouped aggregate queries.
 For grouped aggregation, the system knows how to employ both sort-based and hash-based aggregation methods,
 with sort-based methods being used by default and a hint being available to suggest that a different approach
 (hashing) be used in processing a particular SQL++ query.
@@ -2187,11 +2189,11 @@ The expected result for this query is:
     } ]
 
 ### Everything Must Change  ###
-So far we have been walking through the SQL++ query capabilities of CBAS.
-What really makes CBAS interesting, however, is that it brings this query power to bear on your nearly-current Couchbase Server
+So far we have been walking through the SQL++ query capabilities of Analytics.
+What really makes Analytics interesting, however, is that it brings this query power to bear on your nearly-current Couchbase Server
 data, enabling you to harness the power of parallelism in CBAS to analyze what's going on with your data "up front" in essentially
 real time---without perturbing your front-end applications' performance (or the resulting front-end user experience).
-Before closing this tutorial, then, let's take a very quick look at that aspect of CBAS.
+Before closing this tutorial, then, let's take a very quick look at that aspect of Analytics.
 
 To start, the following SQL++ query lists all of the Kona Brewery's current beer offerings:
 
@@ -2308,8 +2310,8 @@ The result of this query will be a list of the following seven beers:
         }
     } ]
 
-To illustrate CBAS in action, suppose that Kona's marketing department determines that a light beer is needed.
-You can use your favorite Couchbase Server interface to modify the front-end server's beer-sample content accordingly, e.g.:
+To illustrate Analytics in action, suppose that Kona's marketing department determines that a light beer is needed.
+You can use your favorite Couchbase Server interface to modify the front-end server's beer-sample content accordingly, for example:
 
     INSERT INTO `beer-sample` ( KEY, VALUE )
       VALUES
@@ -2319,8 +2321,8 @@ You can use your favorite Couchbase Server interface to modify the front-end ser
       )
     RETURNING META().id as docid, *;
 
-CBAS will shadow this change, updating the beers shadow dataset as a result.
-Go ahead and rerun the CBAS SQL++ query that lists the Kona Brewery's beer offerings:
+Analytics will shadow this change, updating the beers shadow dataset as a result.
+Go ahead and rerun the Analytics SQL++ query that lists the Kona Brewery's beer offerings:
 
     SELECT meta(b).id, b as beer FROM beers b
     WHERE b.brewery_id = "kona_brewing"
@@ -2450,16 +2452,16 @@ The result of the query now reflects the new beer offering:
         }
     } ]
 
-To further illustrate CBAS in action, suppose that Kona's CEO determines that a light beer is in fact NOT needed.
-You can use your favorite N1QL interface again to modify the Couchbase Server's beer-sample content accordingly, i.e.:
+To further illustrate Analytics in action, suppose that Kona's CEO determines that a light beer is in fact NOT needed.
+You can use your favorite N1QL interface again to modify the Couchbase Server's beer-sample content accordingly, that is:
 
     DELETE FROM `beer-sample` b USE KEYS "kona_brewing-skimboard_light_ale";
 
-Finally, if you run the SQL++ Kona beer list query on CBAS once again, you will find that the Kona CEO's wishes have been
-shadowed in CBAS as well.
+Finally, if you run the SQL++ Kona beer list query on Analytics once again, you will find that the Kona CEO's wishes have been
+shadowed in Analytics as well.
 
 ## Further Help ##
-That's it! You are now armed and dangerous with respect to semistructured data management using CBAS via SQL++.
+That's it! You are now armed and dangerous with respect to semistructured data management using Analytics via SQL++.
 More information about SQL++ is available in the SQL++ Query Language (SQL++) reference document as well as in
 its companion SQL++ Functions document.
 

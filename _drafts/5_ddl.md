@@ -1,6 +1,6 @@
 ---
 layout: default
-title: DDL
+title: Data Definition Language (DDL)
 ---
 
 ## <a id="Statements">Statements</a>
@@ -12,7 +12,7 @@ title: DDL
                       | DisconnectStatement
                       | Query ";"
 
-In addition to queries, the CBAS implementation of SQL++ supports statements for data definition and to connect CBAS to Couchbase buckets.
+In addition to queries, the Analytics implementation of SQL++ supports statements for data definition and to connect Analytics to Couchbase buckets.
 
 ## <a id="Creating_and_dropping">Creating and Dropping</a>
 
@@ -22,7 +22,7 @@ In addition to queries, the CBAS implementation of SQL++ supports statements for
     QualifiedName       ::= Identifier ( "." Identifier )?
     DoubleQualifiedName ::= Identifier "." Identifier ( "." Identifier )?
 
-The CREATE statement is used to create (CBAS) buckets and shadow datasets.
+The CREATE statement is used to create (Analytics) buckets and shadow datasets.
 
 ### <a id="Buckets">Buckets</a>
 
@@ -35,14 +35,14 @@ The CREATE statement is used to create (CBAS) buckets and shadow datasets.
                      | ArrayValue
                      | Literal
 
-A (CBAS) bucket is a proxy for a bucket on a cluster of Data Service Nodes.
+An (Analytics) bucket is a proxy for a bucket on a cluster of Data Service Nodes.
 It represents this bucket in all other DDL operations.
-The `CREATE BUCKET` statement creates such a (CBAS) bucket.
+The `CREATE BUCKET` statement creates such an (Analytics) bucket.
 Parameters for the bucket can be provided though a parameter record.
-Currently 2 parameters are supported:
+The following two parameters are supported:
 
-* `name` a string for the name of the bucket used on the Data Service Nodes and
-* `nodes` an array or IP addresses or node names for the Data Service Nodes.
+- `name` a string for the name of the bucket used on the Data Service Nodes
+- `nodes` an array or IP addresses or node names for the Data Service Nodes
 
 Both parameters are optional - the default `name` is the name of the bucket and the default value for `nodes` is `[ "localhost" ]`.
 
@@ -53,7 +53,7 @@ Both parameters are optional - the default `name` is the name of the bucket and 
       "nodes": ["localhost"]
     };
 
-This example creates a new (CBAS) bucket `beerbucket` that represents the bucket `beer-sample` on the Data Service Node running on `localhost`.
+This example creates a new (Analytics) bucket `beerbucket` that represents the bucket `beer-sample` on the Data Service Node running on `localhost`.
 
 ### <a id="Shadow_datasets">Shadow Datasets</a>
 
@@ -89,24 +89,24 @@ The following examples illustrate some uses of the DROP statement.
     DROP DATASET beers;
     DROP DATASET breweries;
 
-removes the dataset and all contained data.
+This removes the dataset and all contained data.
 
 ##### Example
 
     DROP BUCKET beerbucket;
 
-removes the buckets.
+This removes the buckets.
 
 ## <a id="Connecting_and_disconnecting">Connecting and Disconnecting</a>
 
     ConnectStatement ::= "CONNECT" "BUCKET" QualifiedName ( "WITH" RecordValue )? ( "IF" "NOT" "CONNECTED" )?
 
-The CONNECT statement connects a bucket to CBAS and starts shadowing all datasets that are created on the bucket.
-Parameters for the connection can be provided though a parameter record.
-Currently 2 parameters are supported:
+The CONNECT statement connects a bucket to Analytics and starts shadowing all datasets that are created on the bucket.
+Parameters for the connection can be provided through a parameter record.
+The following two parameters are supported:
 
-* `password ` a password for the bucket used on the Data Service Nodes and
-* `timeout ` a connection timeout in ms when connecting to the Data Service Nodes.
+- `password ` a password for the bucket used on the Data Service Nodes
+- `timeout ` a connection timeout defined in ms when connecting to the Data Service Nodes
 
 Both parameters are optional - the default `password` is the empty string and the default `timeout` is the connect timeout used by the Couchbase Java Client.
 
@@ -140,5 +140,3 @@ http://www.ibm.com/support/knowledgecenter/SSEPEK_11.0.0/sqlref/src/tpc/db2z_sql
 https://msdn.microsoft.com/en-us/library/ms174979.aspx
 http://infocenter.sybase.com/help/index.jsp?topic=/com.sybase.infocenter.dc36272.1550/html/commands/X80969.htm
 -->
-
-
