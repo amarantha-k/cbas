@@ -1245,8 +1245,7 @@ This query returns:
       } ]
 
 ## <a id="Limit_clauses">LIMIT Clauses</a>
-The `LIMIT` clause is used to limit the result set to a specified constant size.
-The use of the `LIMIT` clause is illustrated in the following example.
+Use the `LIMIT` clause to limit the result set to a specified constant size, as shown in the following example.
 
 ##### Example
 
@@ -1366,7 +1365,7 @@ an array-valued query expression's result; this is needed above, even though the
 element, to extract the only element in the singleton array and obtain the desired scalar for the comparison.
 
 ## <a id="Let_clauses">LET Clauses</a>
-Similar to `WITH` clauses, the `LET` clauses are useful when a (complex) expression is used several times within a query, allowing it to be written once to make the query more concise. Check the  query shows an example.
+Similar to `WITH` clauses, the `LET` clauses are useful when a (complex) expression is used several times within a query, allowing it to be written once to make the query more concise, as shown in the following example query.
 
 ##### Example
 
@@ -1472,7 +1471,7 @@ This query is equivalent to the following query that does not use the `LET` clau
                  );
 
 ## <a id="Union_all">UNION ALL</a>
-UNION ALL can be used to combine two input streams into one. As in SQL, there is no ordering guarantee on the contents of the output stream. However, unlike SQL, SQL++ does not constrain what the data looks like on the input streams; in particular, it allows heterogenity on the input and output streams. The following odd but legal query is an example:
+The UNION ALL can be used to combine two input streams into one. As in SQL, there is no ordering guarantee on the contents of the output stream. However, unlike SQL, SQL++ does not constrain what the data looks like on the input streams; in particular, it allows heterogeneous on the input and output streams. The following odd but legal query is an example:
 
 ##### Example
 
@@ -1494,7 +1493,7 @@ This query returns:
      ]
 
 ## <a id="Subqueries">Subqueries</a>
-In SQL++, an arbitrary subquery can appear anywhere that an expression can appear.
+In SQL++, an arbitrary subquery appears anywhere that an expression can appear.
 Unlike SQL-92, as was just alluded to, the subqueries in a SELECT list or a boolean predicate need
 not return singleton, single-column relations.
 Instead, they may return arbitrary collections.
@@ -1535,8 +1534,8 @@ For our sample data set, this query returns:
     	"uid": 2
     } ]
 
-Note that a subquery, like a top-level `SELECT` statment, always returns a collection -- regardless of where
-within a query the subquery occurs -- and again, its result is never automatically cast into a scalar.
+Note that a subquery, like a top-level `SELECT` statement, always returns a collection - regardless of where
+within a query the subquery occurs - and again the result is never automatically cast into a scalar.
 
 ## <a id="Vs_SQL-92">SQL++ vs. SQL-92</a>
 The following matrix is a quick "SQL-92 compatibility cheat sheet" for SQL++.
@@ -1552,10 +1551,10 @@ The following matrix is a quick "SQL-92 compatibility cheat sheet" for SQL++.
 | Delimited identifiers | Backticks | Double quotes |
 
 For things beyond this cheat sheet, SQL++ is SQL-92 compliant.
-Morever, SQL++ offers the following additional features beyond SQL-92 (hence the "++" in its name):
+Moreover, SQL++ offers the following additional features beyond SQL-92 (hence the "++" in its name):
 
-  * Fully composable and functional: A subquery can iterate over any intermediate collection and can appear anywhere in a query.
-  * Schema-free: The query language does not assume the existence of a static schema for any data that it processes.
-  * Correlated FROM terms: A right-side FROM term expression can refer to variables defined by FROM terms on its left.
-  * Powerful GROUP BY: In addition to a set of aggregate functions as in standard SQL, the groups created by the `GROUP BY` clause are directly usable in nested queries and/or to obtain nested results.
-  * Generalized SELECT clause: A SELECT clause can return any type of collection, while in SQL-92, a `SELECT` clause has to return a (homogeneous) collection of records.
+  - Fully composable and functional: A subquery can iterate over any intermediate collection and can appear anywhere in a query.
+  - Schema-free: The query language does not assume the existence of a static schema for any data that it processes.
+  - Correlated FROM terms: A right-side FROM term expression can refer to variables defined by FROM terms on its left.
+  - Powerful GROUP BY: In addition to a set of aggregate functions as in standard SQL, the groups created by the `GROUP BY` clause are directly usable in nested queries and/or to obtain nested results.
+  - Generalized SELECT clause: A SELECT clause can return any type of collection, while in SQL-92, a `SELECT` clause has to return a (homogeneous) collection of records.
