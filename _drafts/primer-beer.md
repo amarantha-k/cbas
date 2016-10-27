@@ -67,7 +67,7 @@ To initiate the shadowing relationship of these datasets to the front-end data, 
 
     CONNECT BUCKET beerBucket WITH {"password":""};
 
-> **Note:** The Developer Preview saves the username and password for Couchbase Server as plain text in the clear.
+ **Note:** The Developer Preview saves the username and password for Couchbase Server as plain text in the clear.
 
 Once you have run this statement, Analytics will begin making its copy of the front-end data and continuously monitor it for changes.
 
@@ -248,9 +248,9 @@ and the differences between N1QL and SQL++ will eventually disappear (that is, S
 In this section we introduce SQL++ via a set of example queries, along with their expected results,
 based on the data above, to help you get started.
 Many of the most important features of SQL++ are presented in this set of representative queries.
-You can find more details in the document on the [Data Model](datamodel.html) of Analytics,
-in the Analytics [SQL++ Reference Manual](manual-sqlpp.html),
-and a complete list of the built-in functions is available in the [SQL++ Functions](functions-sqlpp.html) document.
+For more details, see
+[SQL++ Language Reference](1_intro.html),
+and a complete list of the built-in functions is available in the [Function Reference](function-ref.html).
 
 SQL++ is a highly composable expression language.
 Even the very simple expression "1+1;" is a valid SQL++ query that evaluates to 2.
