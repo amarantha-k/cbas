@@ -30,7 +30,7 @@ we will get the following syntax error:
     FROM GleambookUsers user
     WHERE type="advertiser";
 
-Since "type" is a [reserved keyword](#Reserved_keywords) in the SQL++ parser,
+Since "type" is a [reserved keyword](appendix_1_keywords.html) in the SQL++ parser,
 we will get the following syntax error:
 
     Error: Syntax error: In line 3 >>WHERE type="advertiser";<< Encountered 'type' "type" at column 7.

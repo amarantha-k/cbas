@@ -35,9 +35,9 @@ The CREATE statement is used to create (Analytics) buckets and shadow datasets.
                      | ArrayValue
                      | Literal
 
-An Analytics bucket is a proxy for a bucket on a cluster of Data Service Nodes.
+A (Analytics) bucket is a proxy for a bucket on a cluster of Data Service Nodes.
 It represents this bucket in all other DDL operations.
-The `CREATE BUCKET` statement creates such an Analytics bucket.
+The `CREATE BUCKET` statement creates such a (Analytics) bucket.
 Parameters for the bucket can be provided though a parameter record.
 The following two parameters are supported:
 
@@ -62,7 +62,7 @@ This example creates a new (Analytics) bucket `beerbucket` that represents the b
 
 Shadow datasets contain a shadow of the data of a bucket.
 They are connected to a bucket and are updated as the bucket gets updated.
-A Shadow dataset can contain the full content of the dataset or a filtered subset.
+A shadow dataset can contain the full content of the dataset or a filtered subset.
 Multiple shadow datasets can shadow the same bucket.
 A shadow dataset is created `ON` a previously created `BUCKET` with an optional filter expression.
 The name of the dataset is optional and defaults to the name of the bucket.
