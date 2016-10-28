@@ -3,16 +3,11 @@ layout: default
 title: Errors
 ---
 
-A SQL++ query can potentially result in one of the following errors:
-
- - syntax error
- - identifier resolution error
- - type error
- - resource error
-
 If the query processor runs into any error, it
 terminates the ongoing query processing and
 immediately returns an error message to the client.
+
+A SQL++ query can potentially result in one of the following types of errors:
 
 ## <a id="Syntax_errors">Syntax Errors</a>
 A valid SQL++ query must satisfy the SQL++ grammar rules.

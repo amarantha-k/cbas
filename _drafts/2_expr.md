@@ -206,51 +206,51 @@ Arithmetic operators are used to exponentiate, add, subtract, multiply, and divi
 
 | Operator     |  Purpose                                                                | Example    |
 |--------------|-------------------------------------------------------------------------|------------|
-| +, -         |  As unary operators, they denote a <br/>positive or negative expression | SELECT VALUE -1; |
-| +, -         |  As binary operators, they add or subtract                              | SELECT VALUE 1 + 2; |
-| *, /         |  Multiply, divide                                                       | SELECT VALUE 4 / 2.0; |
-| ^            |  Exponentiation                                                         | SELECT VALUE 2^3;       |
-| &#124;&#124; |  String concatenation                                                   | SELECT VALUE "ab"&#124;&#124;"c"&#124;&#124;"d";       |
+| +, -         |  As unary operators, they denote a <br/>positive or negative expression | ```SELECT value -1;``` |
+| +, -         |  As binary operators, they add or subtract                              | ```SELECT value 1 + 2;``` |
+| *, /         |  Multiply, divide                                                       | ```SELECT value 4 / 2.0;``` |
+| ^            |  Exponentiation                                                         | ```SELECT value 2^3; ```      |
+| &#124;&#124; |  String concatenation                                                   | ```SELECT value "ab"&#124;&#124;"c"&#124;&#124;"d";```       |
 
 ### <a id="Collection_operators">Collection Operators</a>
 Collection operators are used for membership tests (IN, NOT IN) or empty collection tests (EXISTS, NOT EXISTS).
 
 | Operator   |  Purpose                                     | Example    |
 |------------|----------------------------------------------|------------|
-| IN         |  Membership test                             | SELECT * FROM ChirpMessages cm <br/>WHERE cm.user.lang IN ["en", "de"]; |
-| NOT IN     |  Non-membership test                         | SELECT * FROM ChirpMessages cm <br/>WHERE cm.user.lang NOT IN ["en"]; |
-| EXISTS     |  Check whether a collection is not empty     | SELECT * FROM ChirpMessages cm <br/>WHERE EXISTS cm.referredTopics; |
-| NOT EXISTS |  Check whether a collection is empty         | SELECT * FROM ChirpMessages cm <br/>WHERE NOT EXISTS cm.referredTopics; |
+| IN         |  Membership test                             | ```SELECT * FROM ChirpMessages cm <br/>WHERE cm.user.lang IN ["en", "de"];``` |
+| NOT IN     |  Non-membership test                         | ``SELECT * FROM ChirpMessages cm <br/>WHERE cm.user.lang NOT IN ["en"]; ``|
+| EXISTS     |  Check whether a collection is not empty     | ```SELECT * FROM ChirpMessages cm <br/>WHERE EXISTS cm.referredTopics;``` |
+| NOT EXISTS |  Check whether a collection is empty         | ```SELECT * FROM ChirpMessages cm <br/>WHERE NOT EXISTS cm.referredTopics;``` |
 
 ### <a id="Comparison_operators">Comparison Operators</a>
 Comparison operators are used to compare values. The comparison operators fall into one of two sub-categories: missing value comparisons and regular value comparisons. SQL++ (and JSON) has two ways of representing missing information in a record - the presence of the field with a NULL for its value (as in SQL), and the absence of the field (which JSON permits). In the following example, the first of the following records represents Jack, whose friend is Jill. In the other examples, Jake is friendless a la SQL, with a friend field that is NULL, while Joe is friendless in a more natural (for JSON) way, that is, without a friend field.
 
 ##### Examples
-{"name": "Jack", "friend": "Jill"}
+  {"name": "Jack", "friend": "Jill"}
 
-{"name": "Jake", "friend": NULL}
+  {"name": "Jake", "friend": NULL}
 
-{"name": "Joe"}
+  {"name": "Joe"}
 
 The following table enumerates all SQL++ comparison operators.
 
 | Operator       |  Purpose                                   | Example    |
 |----------------|--------------------------------------------|------------|
-| IS NULL        |  Test if a value is NULL                       | SELECT * FROM ChirpMessages cm <br/>WHERE cm.user.name IS NULL; |
-| IS NOT NULL    |  Test if a value is not NULL                   | SELECT * FROM ChirpMessages cm <br/>WHERE cm.user.name IS NOT NULL; |
-| IS MISSING     |  Test if a value is MISSING                    | SELECT * FROM ChirpMessages cm <br/>WHERE cm.user.name IS MISSING; |
-| IS NOT MISSING |  Test if a value is not MISSING                | SELECT * FROM ChirpMessages cm <br/>WHERE cm.user.name IS NOT MISSING;|
-| IS UNKNOWN     |  Test if a value is NULL or MISSING            | SELECT * FROM ChirpMessages cm <br/>WHERE cm.user.name IS UNKNOWN; |
-| IS NOT UNKNOWN |  Test if a value is neither NULL nor MISSING   | SELECT * FROM ChirpMessages cm <br/>WHERE cm.user.name IS NOT UNKNOWN;|
-| BETWEEN        |  Test if a value is between a start value and <br/>a end value. The comparison is inclusive <br/>to both start and end values. |  SELECT * FROM ChirpMessages cm <br/>WHERE cm.chirpId BETWEEN 10 AND 20;|
-| =              |  Equality test                                 | SELECT * FROM ChirpMessages cm <br/>WHERE cm.chirpId=10; |
-| !=             |  Inequality test                               | SELECT * FROM ChirpMessages cm <br/>WHERE cm.chirpId!=10;|
-| <              |  Less than                                     | SELECT * FROM ChirpMessages cm <br/>WHERE cm.chirpId<10; |
-| >              |  Greater than                                  | SELECT * FROM ChirpMessages cm <br/>WHERE cm.chirpId>10; |
-| <=             |  Less than or equal to                         | SELECT * FROM ChirpMessages cm <br/>WHERE cm.chirpId<=10; |
-| >=             |  Greater than or equal to                      | SELECT * FROM ChirpMessages cm <br/>WHERE cm.chirpId>=10; |
-| LIKE           |  Test if the left side matches a<br/> pattern defined on the right<br/> side; in the pattern,  "%" matches  <br/>any string while "&#95;" matches <br/> any character. | SELECT * FROM ChirpMessages cm <br/>WHERE cm.user.name LIKE "%Giesen%";|
-| NOT LIKE       |  Test if the left side does not <br/>match a pattern defined on the right<br/> side; in the pattern,  "%" matches <br/>any string while "&#95;" matches <br/> any character. | SELECT * FROM ChirpMessages cm <br/>WHERE cm.user.name NOT LIKE "%Giesen%";|
+| IS NULL        |  Test if a value is NULL                       | ```SELECT * FROM ChirpMessages cm <br/>WHERE cm.user.name IS NULL;``` |
+| IS NOT NULL    |  Test if a value is not NULL                   | ```SELECT * FROM ChirpMessages cm <br/>WHERE cm.user.name IS NOT NULL;``` |
+| IS MISSING     |  Test if a value is MISSING                    | ```SELECT * FROM ChirpMessages cm <br/>WHERE cm.user.name IS MISSING;``` |
+| IS NOT MISSING |  Test if a value is not MISSING                | ```SELECT * FROM ChirpMessages cm <br/>WHERE cm.user.name IS NOT MISSING;```|
+| IS UNKNOWN     |  Test if a value is NULL or MISSING            | ```SELECT * FROM ChirpMessages cm <br/>WHERE cm.user.name IS UNKNOWN;``` |
+| IS NOT UNKNOWN |  Test if a value is neither NULL nor MISSING   | ```SELECT * FROM ChirpMessages cm <br/>WHERE cm.user.name IS NOT UNKNOWN;```|
+| BETWEEN        |  Test if a value is between a start value and <br/>a end value. The comparison is inclusive <br/>to both start and end values. |  ```SELECT * FROM ChirpMessages cm <br/>WHERE cm.chirpId BETWEEN 10 AND 20;```|
+| =              |  Equality test                                 | ```SELECT * FROM ChirpMessages cm <br/>WHERE cm.chirpId=10;``` |
+| !=             |  Inequality test                               | ```SELECT * FROM ChirpMessages cm <br/>WHERE cm.chirpId!=10;```|
+| <              |  Less than                                     | ```SELECT * FROM ChirpMessages cm <br/>WHERE cm.chirpId<10;``` |
+| >              |  Greater than                                  | ```SELECT * FROM ChirpMessages cm <br/>WHERE cm.chirpId>10;``` |
+| <=             |  Less than or equal to                         | ```SELECT * FROM ChirpMessages cm <br/>WHERE cm.chirpId<=10;``` |
+| >=             |  Greater than or equal to                      | ```SELECT * FROM ChirpMessages cm <br/>WHERE cm.chirpId>=10;``` |
+| LIKE           |  Test if the left side matches a<br/> pattern defined on the right<br/> side; in the pattern,  "%" matches  <br/>any string while "&#95;" matches <br/> any character. | ```SELECT * FROM ChirpMessages cm <br/>WHERE cm.user.name LIKE "%Giesen%";```|
+| NOT LIKE       |  Test if the left side does not <br/>match a pattern defined on the right<br/> side; in the pattern,  "%" matches <br/>any string while "&#95;" matches <br/> any character. | ```SELECT * FROM ChirpMessages cm <br/>WHERE cm.user.name NOT LIKE "%Giesen%";```|
 
 The following table summarizes how the missing value comparison operators work.
 
@@ -268,9 +268,9 @@ Logical operators perform logical `NOT`, `AND`, and `OR` operations over Boolean
 
 | Operator |  Purpose                                   | Example    |
 |----------|-----------------------------------------------------------------------------|------------|
-| NOT      |  Returns true if the following condition is false, otherwise returns false  | SELECT VALUE NOT TRUE;  |
-| AND      |  Returns true if both branches are true, otherwise returns false            | SELECT VALUE TRUE AND FALSE; |
-| OR       |  Returns true if one branch is true, otherwise returns false                | SELECT VALUE FALSE OR FALSE; |
+| NOT      |  Returns true if the following condition is false, otherwise returns false  | ```SELECT VALUE NOT TRUE;``` |
+| AND      |  Returns true if both branches are true, otherwise returns false            | ```SELECT VALUE TRUE AND FALSE;``` |
+| OR       |  Returns true if one branch is true, otherwise returns false                | ```SELECT VALUE FALSE OR FALSE;``` |
 
 The following table is the truth table for `AND` and `OR`.
 
