@@ -80,7 +80,7 @@ The contents of the example collections are as follows:
 
 `GleambookUsers` collection:
 
-```javascript    
+```    
 	{
 		"id":1,
 		"alias":"Margarita","name":"MargaritaStoddard","nickname":"Mags",
@@ -109,7 +109,6 @@ The contents of the example collections are as follows:
 
 `GleambookMessages` collection:
 
-```javascript
 	{
 		"messageId":2,
 		"authorId":1,
@@ -159,7 +158,6 @@ The contents of the example collections are as follows:
 		"senderLocation":point("38.97,77.49"),
 		"message":" can't stand at&t its plan is terrible"
 	}
-```
 
 ## <a id="Select_clauses">SELECT Clause</a>
 The SQL++ `SELECT` clause always returns a collection value as its result (even if the result is empty or a singleton).

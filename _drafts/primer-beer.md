@@ -378,7 +378,7 @@ As an example, the next query applies a range condition together with a string c
     ORDER BY bw.name;
 
 The expected result for this query is as follows:
-```javascript
+```
     [ {
         "geo": {
             "accuracy": "RANGE_INTERPOLATED",
