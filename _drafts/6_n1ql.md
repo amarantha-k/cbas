@@ -29,7 +29,7 @@ For N1QL users, the following matrix is a quick N1QL compatibility cheat sheet f
 SQL++ generalizes N1QL's syntax constructs such as `USE KEYS`, `ON KEYS`, `ON KEY`, `NEST`,
 `LEFT OUTER NEST` and `ARRAY` and hence relaxes the index or primary key
 restrictions for acceptable queries.
-Note that INSER/UPSERT/DELETE are not supported in the Couchbase Analytics Service.
-If you wish to do any data mutations, do that through the Couchbase Server SDK
-or N1QL, and the mutations will be instantly, automatically synchronized into the Couchbase Analytics
+Note that INSERT/UPSERT/DELETE statements are not supported in the Couchbase Analytics Service.
+If you want to do any data mutations, do that through the Couchbase Server SDK
+or N1QL, and the mutations are instantly, automatically synchronized into the Couchbase Analytics
 Service.
