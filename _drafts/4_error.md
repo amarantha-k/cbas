@@ -58,7 +58,7 @@ youl get the following identifier resolution error:
 
 If the compiler cannot figure out all possible fields in
 `GleambookUsers` and `GleambookMessages`,
-we will get an identifier resolution error as follows:
+you will get an identifier resolution error as follows:
 
     Error: Cannot resolve ambiguous alias reference for undefined identifier name
 
@@ -74,7 +74,7 @@ it processes does not satisfy the type requirement.
     abs("123");
 
 Since function `abs` can only process numeric input values,
-we will get the following type error:
+you will get the following type error:
 
     Error: Arithmetic operations are not implemented for string
 

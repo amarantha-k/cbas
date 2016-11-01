@@ -75,7 +75,7 @@ The following syntax shows the (rich) grammar for the `SELECT` statement in SQL+
     OrderbyClause      ::= <ORDER> <BY> Expression ( <ASC> | <DESC> )? ( "," Expression ( <ASC> | <DESC> )? )*
     LimitClause        ::= <LIMIT> Expression ( <OFFSET> Expression )?
 
-In this section, we use two stored collections of records (datasets), `GleambookUsers` and `GleambookMessages`, in a series of running examples to explain `SELECT` queries.
+In this section, use two stored collections of records (datasets), `GleambookUsers` and `GleambookMessages`, in a series of running examples to explain `SELECT` queries.
 The contents of the example collections are as follows:
 
 `GleambookUsers` collection:
@@ -739,17 +739,17 @@ This query returns:
     	"uid": 2
     } ]
 
-As we can see from the above query result, each group in the example query's output has an associated group
+As you can see from the above query result, each group in the example query's output has an associated group
 variable value called `msgs` that appears in the `SELECT *`'s result.
 This variable contains a collection of records associated with the group; each of the group's `message` values
 appears in the `msg` field of the records in the `msgs` collection.
 
 The group variable in SQL++ makes more complex, composable, nested subqueries over a group possible, which is
 important given the more complex data model of SQL++ (relative to SQL).
-As a simple example of this, as we really just want the messages associated with each user, we might wish to avoid
+As a simple example of this, as you really just want the messages associated with each user, you may wish to avoid
 the "extra wrapping" of each message as the `msg` field of a record.
 (That wrapping is useful in more complex cases, but is essentially just in the way here.)
-We can use a subquery in the `SELECT` clause to tunnel through the extra nesting and produce the desired result.
+You can use a subquery in the `SELECT` clause to tunnel through the extra nesting and produce the desired result.
 
 ##### Example
 
