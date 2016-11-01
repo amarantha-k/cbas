@@ -1532,11 +1532,11 @@ For our sample data set, this query returns:
     	"uid": 2
     } ]
 
-Note that a subquery, like a top-level `SELECT` statement, always returns a collection - regardless of where
-within a query the subquery occurs - and again the result is never automatically cast into a scalar.
+**Note:** A subquery, like a top-level `SELECT` statement, always returns a collection,regardless of where
+within a query the subquery occurs, and again the result is never automatically cast into a scalar.
 
 ## <a id="Vs_SQL-92">SQL++ vs. SQL-92</a>
-The following matrix is a quick "SQL-92 compatibility cheat sheet" for SQL++.
+The following matrix is a quick SQL-92 compatibility cheat sheet for SQL++.
 
 | Feature |  SQL++ | SQL-92 |
 |----------|--------|--------|
@@ -1544,11 +1544,11 @@ The following matrix is a quick "SQL-92 compatibility cheat sheet" for SQL++.
 | Subquery | Returns a collection  | The returned collection is cast into a scalar value if the subquery appears in a SELECT list or on one side of a comparison or as input to a function |
 | LEFT OUTER JOIN |  Fills in `MISSING`(s) for non-matches  |   Fills in `NULL`(s) for non-matches    |
 | UNION ALL       | Allows heterogeneous inputs and output | Input streams must be UNION-compatible and output field names are drawn from the first input stream
-| IN constant_expr | The constant expression has to be an array or multiset, i.e., [..,..,...] | The constant collection can be represented as comma-separated items in a paren pair |
+| IN constant_expr | The constant expression has to be an array or multiset, that is, [..,..,...] | The constant collection can be represented as comma-separated items in a paren pair |
 | String literal | Double quotes or single quotes | Single quotes only |
 | Delimited identifiers | Backticks | Double quotes |
 
-For things beyond this cheat sheet, SQL++ is SQL-92 compliant.
+For items beyond this cheat sheet, SQL++ is compliant with SQL-92.
 Moreover, SQL++ offers the following additional features beyond SQL-92 (hence the "++" in its name):
 
   - Fully composable and functional: A subquery can iterate over any intermediate collection and can appear anywhere in a query.
