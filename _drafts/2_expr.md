@@ -24,7 +24,7 @@ title: Expressions
 
     Expression ::= OperatorExpression | CaseExpression | QuantifiedExpression
 
-SQL++ is a highly composable expression language. Each SQL++ expression returns zero or more data model instances. There are three major types of expressions in SQL++. At the topmost level, a SQL++ expression can be an OperatorExpression (similar to a mathematical expression), an ConditionalExpression (to choose between alternative values), or a QuantifiedExpression (which yields a boolean value). Each type is explained below as we explore the full SQL++ grammar.
+SQL++ is a highly composable expression language. Each SQL++ expression returns zero or more data model instances. There are three major types of expressions in SQL++. At the topmost level, a SQL++ expression can be an OperatorExpression (similar to a mathematical expression), a ConditionalExpression (to choose between alternative values), or a QuantifiedExpression (which yields a boolean value). Each type is explained below as we explore the full SQL++ grammar.
 
 ## <a id="Primary_expressions">Primary Expressions</a>
 
@@ -36,7 +36,7 @@ SQL++ is a highly composable expression language. Each SQL++ expression returns 
 
 The most basic building block for any SQL++ expression is PrimaryExpression. This can be a simple literal (constant)
 value, a reference to a query variable that is in scope, a parenthesized expression, a function call, or a newly
-constructed instance of the data model (such as a newly constructed record, array, or multiset of data model instances).
+constructed instance of the data model, such as a newly constructed record, array, or multiset of data model instances.
 
 ### <a id="Literals">Literals</a>
 
@@ -80,7 +80,7 @@ Different from standard SQL, double quotes are used in the same manner as single
     <LETTER>              ::= ["A" - "Z", "a" - "z"]
     DelimitedIdentifier   ::= "\`" (<ESCAPE_APOS> | ~["\'"])* "\`"
 
-A variable in SQL++ can be bound to any legal data model value. A variable reference refers to the value to which an in-scope variable is bound. (For example, a variable binding may originate from one of the `FROM`, `WITH`, or `LET` clauses of a `SELECT` statement or from an input parameter in the context of a function body) Backticks, for example, \`id\`, are used for delimited identifiers. Delimiting is needed when a variable's desired name clashes with a SQL++ keyword or includes characters that are not allowed in regular identifiers.
+A variable in SQL++ can be bound to any legal data model value. A variable reference refers to the value which an in-scope variable is bound to. For example, a variable binding may originate from one of the `FROM`, `WITH`, or `LET` clauses of a `SELECT` statement or from an input parameter in the context of a function body. Backticks, as in \`id\`, are used for delimited identifiers. Delimiting is needed when a variable's desired name clashes with a SQL++ keyword or includes characters that are not allowed in regular identifiers.
 
 ##### Examples
 
