@@ -12,19 +12,19 @@ and then explore a set of illustrative queries as a quick way to get familiar wi
 The complete set of steps to create and connect the sample datasets are included, along with a collection of runnable SQL++
 queries and their expected results.
 
-To run these examples, you'll need to complete the set up described in the [Quick Start](http://developer-stage.cbauthx.com/documentation/server/0.5/analytics/quick-start.html).
+To run these examples, you must complete the set up as described in [Quick Start](quick-start.html).
 
 You can verify that everything's working by issuing a simple SQL++ test query as shown below:
 
     "Let there be beer!";
 
 As you read through this document, you should try each step for yourself on your own Analytics instance.
-You can use your favorite Analytics interface to do this: the Analytics Workbench, the modified version of cbq that ships with Analytics, or the REST API. See [Runninq Queries](http://developer-stage.cbauthx.com/documentation/server/0.5/analytics/run-query.html) for details.
+You can use your favorite Analytics interface to do this: the Analytics Workbench, the modified version of cbq that ships with Analytics, or the REST API. For details, see [Runninq Queries](run-query.html).
 Once you have reached the end of this tutorial, you will be armed and dangerous,
 having all the basic Analytics knowledge that you'll need to start down the path of exploring the power of NoSQL data analytics.
-We think you will find this to be a freeing experience:
+You will find this to be a freeing experience.
 Analytics SQL++ queries never touch your Couchbase data servers, running instead (in parallel) on real-time shadow copies of your data.
-As a result, you'll find yourself in a world where you can "ask the system anything!" -- you won't need to worry about
+As a result, you'll find yourself in a world where you can *ask the system anything!* -- you won't need to worry about
 slowing down the Couchbase Server nodes with complex queries, you won't have to create indexes to explore data,
 and the Analytics query language (SQL++) won't try to keep you from asking queries that would be too perforamance-costly
 to ask against your performance sensitive operational data.
@@ -35,16 +35,16 @@ In this section, you will learn about the Analytics model for data.
 ### Organizing Data in Analytics ###
 
 The top-level organizing concept in the Analytics data world is the _dataverse_.
-A **dataverse**, short for "data universe", is a namespace that gives you a place to create and manage datasets and other artifacts for a given Analytics application. In that respect, a dataverse is similar to a database or a schema in a relational DBMS. To store your data in Analytics, you create a dataverse and then use it to hold the _datasets_ for your own data. We'll get to this next. You get a "Default" dataverse for free, and Analytics will just use that if you don't specify another dataverse.  
+A **dataverse**, short for data universe, is a namespace that gives you a place to create and manage datasets and other artifacts for a given Analytics application. In that respect, a dataverse is similar to a database or a schema in a relational DBMS. To store your data in Analytics, you create a dataverse and then use it to hold the _datasets_ for your own data. We'll get to this next. You get a *Default* dataverse for free, and Analytics will just use that if you don't specify another dataverse.  
 
-**Datasets** are containers that hold collections of JSON objects. They are similar to tables in RDBMS or keyspaces in N1QL. In this tutorial, all of the datasets you create are "**shadow datasets**" that contain real-time synchronized copies of selected data from Couchbase Server.  For shadow datasets, Analytics uses DCP to automatically maintain its own local representations for the JSON documents in the Couchbase Server data nodes.
- 
-OK, let's put these concepts to work. 
+**Datasets** are containers that hold collections of JSON objects. They are similar to tables in RDBMS or keyspaces in N1QL. In this tutorial, all of the datasets you create are **shadow datasets** that contain real-time synchronized copies of selected data from Couchbase Server.  For shadow datasets, Analytics uses DCP to automatically maintain its own local representations for the JSON documents in the Couchbase Server data nodes.
 
-A newly created Analytics instance starts out "empty". That is, it contains no data other than the Analytics system catalogs. These system catalogs live in a special dataverse called the "Metadata" dataverse. Query the Metadata dataverse like so:
+OK, let's put these concepts to work.
+
+A newly created Analytics instance starts out *empty*. That is, it contains no data other than the Analytics system catalogs. These system catalogs live in a special dataverse called the **Metadata** dataverse. Query the Metadata dataverse like so:
 
     SELECT * FROM Metadata.`Dataverse`;
-    
+
 The output will resemble this on a freshly installed system:
 
     {
@@ -76,9 +76,9 @@ The output will resemble this on a freshly installed system:
 	    }
     }
 
-This sample scenario deals with information about beers and breweries, which you'll need to get from Couchbase Server. 
-To keep things simple, use the "Default" dataverse. That means your first task is to tell Analytics about the Couchbase Server data that you want to shadow and the shadow datasets where you want it to live.
-The following Analytics DDL statements show you how to tell Analytics about the "beer-sample" bucket in Couchbase Server,
+This sample scenario deals with information about beers and breweries, which you'll need to get from Couchbase Server.
+To keep things simple, use the *Default* dataverse. That means your first task is to tell Analytics about the Couchbase Server data that you want to shadow and the shadow datasets where you want it to live.
+The following Analytics DDL statements show you how to tell Analytics about the *beer-sample* bucket in Couchbase Server,
 where all of the beer and brewery information resides, and ask Analytics to shadow the data using two datasets, `breweries` and `beers`.
 
     CREATE BUCKET beerBucket WITH {"name":"beer-sample","nodes":"127.0.0.1"};
@@ -94,7 +94,7 @@ To actually initiate the shadowing relationship of these datasets to the data in
 
     CONNECT BUCKET beerBucket WITH {"password":""};
 
-> **Note:** The Developer Preview saves the username and password for Couchbase Server as plain text in the clear. 
+**Note:** The Developer Preview saves the username and password for Couchbase Server as plain text in the clear.
 
 Once you run this statement, Analytics begins making its copy of the Couchbase Server documents and continuously monitors it for changes.
 
@@ -113,7 +113,7 @@ The following SQL++ _SELECT_ statements are one good way to accomplish that:
 
 Notice anything funny here? Analytics can accept mutli-statement inputs and executes them as a batch, which is something new if you're coming from N1QL. Let's take a look at the returns one at a time.
 
-The first statement above looks in the Analytics system catalogs for datasets that have been created in the "Default" dataverse.
+The first statement above looks in the Analytics system catalogs for datasets that have been created in the *Default* dataverse.
 At this point, assuming that you are just getting started, you will see only your two new shadow datasets:
 
     [ {
@@ -274,39 +274,32 @@ You're ready to start running ad hoc queries against your breweries and beers da
 
 To do this, you'll program Analytics using the SQL++ query language, a SQL-inspired language designed for working with semistructured data. SQL++ has much in common with SQL, but there are a few differences due to the data model that SQL++ is designed to serve. SQL was designed in the 1970's to interact with the flat, schema-ified world of relational databases. SQL++ is designed for the nested, schema-less (or schema-optional, in Analytics) world of NoSQL systems. SQL++ offers experienced SQL users a mostly familiar paradigm for querying and manipulating data in Analytics. SQL++ is closely related to N1QL, the current query language used in Couchbase Server. SQL++ is really a functional superset of N1QL that is a bit closer to SQL, and the differences between N1QL and SQL++ will eventually disappear in future releases.
 
-In this section we introduce SQL++ via a set of example queries with their expected results, based on the data above, to help you get started. Many of the most important features of SQL++ are presented in this set of representative queries. 
+In this section, we introduce SQL++ via a set of example queries with their expected results, based on the data above, to help you get started. Many of the most important features of SQL++ are presented in this set of representative queries.
 
-For even more on the query language, see [SQL++ Language Reference](1_intro.html) with a complete list of built-in functions in the [Function Reference](function-ref.html).
+For more information on the query language, see [SQL++ Language Reference](1_intro.html) with a complete list of built-in functions in the [Function Reference](function-ref.html).
 Analytics supports the SQL++ query language, and it is a
 SQL-inspired language designed for working with semistructured data.
-SQL++ has much in common with SQL, but there are differences due to the data model that SQL++ is designed to serve.
-SQL was designed in the 1970's to interact with the flat, schema-ified world of relational databases.
-SQL++ is designed for the nested, schema-less (or schema-optional, in Analytics) world of NoSQL systems.
-SQL++ offers a mostly familiar paradigm for experienced SQL users to use to query and manipulate data in Analytics.
-SQL++ is also related to N1QL, the current query language used in Couchbase Server.
-SQL++ is really a functional superset of N1QL that is a bit closer to SQL,
+- SQL++ has much in common with SQL, but there are differences due to the data model that SQL++ is designed to serve.
+- SQL was designed in the 1970's to interact with the flat, schema-ified world of relational databases.
+- SQL++ is designed for the nested, schema-less (or schema-optional, in Analytics) world of NoSQL systems.
+- SQL++ offers a mostly familiar paradigm for experienced SQL users to use to query and manipulate data in Analytics.
+- SQL++ is also related to N1QL, the current query language used in Couchbase Server.
+- SQL++ is really a functional superset of N1QL that is a bit closer to SQL,
 and the differences between N1QL and SQL++ will eventually disappear (that is, SQL++ is really the future of N1QL).
-
-In this section we introduce SQL++ via a set of example queries, along with their expected results,
-based on the data above, to help you get started.
-Many of the most important features of SQL++ are presented in this set of representative queries.
-For more details, see
-[SQL++ Language Reference](1_intro.html),
-and a complete list of the built-in functions is available in the [Function Reference](function-ref.html).
 
 SQL++ is a highly composable expression language.
 Even the very simple expression `"1+1;"` is a valid SQL++ query that evaluates to `2`.
 Try it for yourself!
 
-It's worth noting that each time you execute a SQL++ query, the Analytics query engine employs state-of-the-art 
-parallel processing algorithms similar to those used by the parallel relational DBMSs that power many 
+It's worth noting that each time you execute a SQL++ query, the Analytics query engine employs state-of-the-art
+parallel processing algorithms similar to those used by the parallel relational DBMSs that power many
 enterprise data warehouses. Unlike those systems, Analytics also works on rich, flexible schema data.
 
 Let's go ahead and write some queries and start learning SQL++ through examples.
 
 ### Query 0 - Key-Based Lookup ###
-For our first query, let's find a particular brewery based on its Couchbase Server key.
-We can do this for the Kona Brewing company as follows:
+For your first query, let's find a particular brewery based on its Couchbase Server key.
+You can do this for the Kona Brewing company as follows:
 
     SELECT meta(bw) AS meta, bw AS data
     FROM breweries bw
@@ -355,7 +348,7 @@ Notice how the resulting record of interest has two fields whose names were requ
 
 ### Query 1 - Exact-Match Lookup ###
 The SQL++ language, like SQL, supports a variety of different predicates.
-For our next query, let's find the same brewery information but in a slightly simpler or cleaner way based only on the data:
+For the next query, let's find the same brewery information but in a slightly simpler or cleaner way based only on the data:
 
     SELECT VALUE bw
     FROM breweries bw
@@ -388,7 +381,7 @@ In SQL++, you can select a single value (whether it be an atomic or scalar value
 or an unordered or ordered collection value) by using a _SELECT VALUE_ clause as was done above.
 If you instead use the more SQL-familier _SELECT_ clause, SQL++ will return records instead of values,
 and since a given query may _SELECT_ multiple values in its result (like our first query did),
-you will get a slightly differently shaped result using _SELECT_ instead of _SELECT VALUE_:
+you get a slightly differently shaped result using _SELECT_ instead of _SELECT VALUE_:
 
     [ {
         "bw": {
@@ -538,12 +531,12 @@ The expected result for this query is as follows:
     } ]
 ```
 ### Query 3 (and friends) - Equijoin ###
-In addition to simply binding variables to data instances and returning them "whole",
+In addition to simply binding variables to data instances and returning them _whole_,
 a SQL++ query can construct new records to return based on combinations of variable bindings.
 This gives SQL++ the power to do projections and joins much like those done using multi-table _FROM_ clauses in SQL.
-For example, if we wanted a list of all breweries paired with their associated beers,
+For example, if you wanted a list of all breweries paired with their associated beers,
 with the list enumerating the brewery name and the beer name for each such pair.
-We can do this as follows in SQL++, while also limiting the answer set size to at most 20 results:
+You can do this as follows in SQL++, while also limiting the answer set size to at most 20 results:
 
     SELECT bw.name AS brewer, br.name AS beer
     FROM breweries bw, beers br
@@ -557,7 +550,7 @@ containing the brewery's name and the beer's name, respectively, for each brewer
 Notice how the use of a SQL-style _SELECT_ clause, as opposed to the new SQL++ _SELECT VALUE_
 clause, automatically results in the construction of a new record value for each result.
 
-One interesting thing about this query is that it is evaluated using hash-based parallel join processing, which 
+One interesting thing about this query is that it is evaluated using hash-based parallel join processing, which
 can fully leverage all available nodes for query processing. This becomes a necessity when running expensive
 queries at scale.
 
@@ -625,7 +618,7 @@ The expected result of this example SQL++ join query is shown below:
         "beer": "Drie Fonteinen Kriek"
     } ]
 
-If we were feeling lazy, for example, while browsing our data casually, we can use _SELECT *_ in SQL++ to
+If you are feeling lazy, for example, while browsing our data casually, use _SELECT *_ in SQL++ to
 return all of the matching user/message data:
 
     SELECT *
@@ -1392,13 +1385,13 @@ Finally (for now :-)), another more explicit SQL++ way of achieving the very sam
     LIMIT 20;
 
 This version of the query uses an explicit record constructor to build each result record.
-(It is worth noting that the string field names "bw" and "br" in the record constructor above are both simple SQL++
-expressions themselves---so in the most general case, even the resulting field names can be computed as part of the query,
-making SQL++ a very powerful tool for slicing and dicing semistructured data.)
+Note that the string field names "bw" and "br" in the record constructor above are both simple SQL++
+expressions themselves so in the most general case, even the resulting field names can be computed as part of the query,
+making SQL++ a very powerful tool for slicing and dicing semistructured data.
 
 (It is worth knowing, with respect to influencing Analytics's query evaluation,
 that _FROM_ and _JOIN_ clauses - also known as joins - are currently evaluated in order,
-with the "left" clause probing the data of the "right" clause.)
+with the _left_ clause probing the data of the _right_ clause.)
 
 ### Query 4 - Nested Outer Join ###
 In order to support joins between tables with missing or dangling join tuples, the designers of SQL ended
@@ -1409,11 +1402,11 @@ grouped by customer, without omitting those customers who haven't placed any ord
 
 The SQL++ language supports nesting, both of queries and of query results,
 and the combination allows for a cleaner and more natural approach to such queries.
-As an example, suppose we wanted for each brewery to produce a record that contains
+As an example, suppose you wanted for each brewery to produce a record that contains
 the brewery name along with a list of all of the brewery's offered beer names and alcohol percentages.
 In the flat (also known as 1NF) world of SQL, approximating this query would involve a left outer join between
 breweries and beers, ordered by brewery, with the brewery name being repeated along side each beer's information.
-In the richer ("NoSQL") world of SQL++, this use case can be handled more naturally as follows:
+In the richer (NoSQL) world of SQL++, this use case can be handled more naturally as follows:
 
     SELECT bw.name AS brewer,
           (SELECT br.name, br.abv FROM beers br
@@ -1567,7 +1560,7 @@ The join predicates for some use cases involve predicates with functions; Analyt
 expression of such queries and will still evaluate them as best it can using nested loop based
 techniques (and broadcast joins in the parallel case).
 
-As an example of such a use case, suppose that we wanted, for each Arizona brewery, to get
+As an example of such a use case, suppose that you wanted for each Arizona brewery to get
 the brewery's name, location, and a list of competitors' names-where competitors are other
 breweries that are geographically close to their location.
 In SQL++, this can be accomplished in a manner similar to the previous query, but with locality plus
@@ -1708,12 +1701,12 @@ The expected result for this query is as shown below:
     } ]
 
 ### Query 6 - Existential Quantification ###
-The expressive power of SQL++ includes support for queries involving "some" (existentially quantified)
-and "all" (universally quantified) query semantics.
+The expressive power of SQL++ includes support for queries involving _some_ (existentially quantified)
+and _all_ (universally quantified) query semantics.
 Quantified predicates are especially useful for querying datasets involving nested collections of records,
 in order to find records where some or all of their nested sets' records satisfy a condition of interest.
 To illustrate their use in such situations, we start here by using another (orthogonal) feature of SQL++,
-its _WITH_ clause, to create a temporarily nested view of breweries and their beers; we will then use an
+its _WITH_ clause, to create a temporarily nested view of breweries and their beers; then use an
 existential (_SOME_) predicate to find those breweries whose beers include at least one IPA and return the
 brewery's name, phone number, and complete list of beer names and associated alcohol levels.
 (This is clearly an important analytical use case, right?!)
@@ -2004,7 +1997,7 @@ The expected result in this case is as below:
     } ]
 
 ### Query 7 - Universal Quantification ###
-As an example of a universally quantified SQL++ query, we can find those breweries that only have IPAs:
+As an example of a universally quantified SQL++ query, let's find those breweries that only have IPAs:
 
     WITH nested_breweries AS
          (
@@ -2064,7 +2057,7 @@ This query's result are:
 
     { "num_beers": 5891 }
 
-If an "unwrapped" value is preferred, the following variant can be used instead:
+If an _unwrapped_ value is preferred, the following variant can be used instead:
 
     SELECT VALUE COUNT(b) FROM beers b;
 
@@ -2239,7 +2232,7 @@ The expected result for this query is:
     } ]
 
 ### Everything Must Change  ###
-So far we have been walking through the SQL++ query capabilities of Analytics.
+So far you have been walking through the SQL++ query capabilities of Analytics.
 What really makes Analytics interesting, however, is that it brings this query power to bear on your nearly-current Couchbase Server
 data, enabling you to harness the power of parallelism in Analytics to analyze what's going on with your data "up front" in essentially
 real time, without perturbing your Couchbase Server applications' performance (or the resulting end user experience).
@@ -2512,7 +2505,7 @@ shadowed in Analytics as well.
 
 ## Further Help ##
 That's it! You are now armed and dangerous with respect to semistructured data management using Analytics via SQL++.
-For more information, see [SQL++ Language Reference](1_intro.html), or consult the complete list of built-in functions 
+For more information, see [SQL++ Language Reference](1_intro.html), or consult the complete list of built-in functions
 in the [Function Reference](function-ref.html).
 
 Couchbase Analytics lets you bring a powerful new NoSQL parallel query engine to bear on your data, using the latest state of the art parallel query processing techniques under the hood. We hope you find it useful in exploring and analyzing your Couchbase Server data - without having to worry about end user impact or doing ETL grunt work to make your analyses possible.
