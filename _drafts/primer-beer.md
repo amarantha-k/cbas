@@ -2,9 +2,9 @@
 layout: default
 title: Tutorial - Pairing Beers with Analytics
 ---
+This tutorial introduces the main features of the new Couchbase Analytics through examples.
 
 ## Welcome to the Analytics DP! ##
-This document introduces the main features of the new Couchbase Analytics through examples.
 Since few things in life are more important than choosing the right beer to pair with one's main dish,
 this tutorial explores the pairing of Analytics and beers.
 You'll create a set of Analytics shadow datasets based on the Couchbase beer-sample bucket
