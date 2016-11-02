@@ -6,74 +6,101 @@ title: Tutorial - Pairing Beers with Analytics
 ## Welcome to the Analytics DP! ##
 This document introduces the main features of the new Couchbase Analytics through examples.
 Since few things in life are more important than choosing the right beer to pair with one's main dish,
-this example explores the pairing of Analytics and beers.
-More specifically, it shows how to create a set of Analytics shadow datasets based on the Couchbase beer-sample bucket,
-together with a set of illustrative queries, as a quick way to introduce you to the new "Analytics user experience".
-The complete set of steps to create and connect the sample datasets, along with a collection of runnable SQL++
-queries and their expected results, are included.
+this tutorial explores the pairing of Analytics and beers.
+You'll create a set of Analytics shadow datasets based on the Couchbase beer-sample bucket
+and then explore a set of illustrative queries as a quick way to get familiar with the new Analytics user experience.
+The complete set of steps to create and connect the sample datasets are included, along with a collection of runnable SQL++
+queries and their expected results.
 
-This document assumes that you are comfortable using Couchbase Server and know how to query it using N1QL.
-It assumes that you already have a running instance of Couchbase Server 4.5 on your favorite machine
-and that you know how to interact with it using the Couchbase Console.
-It also assumes that you have the Couchbase beer-sample example data bucket installed on that system.
-Finally, this document assumes that you have already downloaded and successfully installed the Analytics DP
-and that you have verified that it is up and running (for example, by issuing a simple SQL++ test query as shown below:
+To run these examples, you'll need to complete the set up described in the [Quick Start](http://developer-stage.cbauthx.com/documentation/server/0.5/analytics/quick-start.html).
+
+You can verify that everything's working by issuing a simple SQL++ test query as shown below:
 
     "Let there be beer!";
 
 As you read through this document, you should try each step for yourself on your own Analytics instance.
-You can use whatever your favorite Analytics interface is to do this (for example, Analytics Workbench, cbq, or curl);
+You can use your favorite Analytics interface to do this: the Analytics Workbench, the modified version of cbq that ships with Analytics, or the REST API. See [Runninq Queries](http://developer-stage.cbauthx.com/documentation/server/0.5/analytics/run-query.html) for details.
 Once you have reached the end of this tutorial, you will be armed and dangerous,
 having all the basic Analytics knowledge that you'll need to start down the path of exploring the power of NoSQL data analytics.
-As you have already heard by now, this will hopefully prove to be a freeing experience:
+We think you will find this to be a freeing experience:
 Analytics SQL++ queries never touch your Couchbase data servers, running instead (in parallel) on real-time shadow copies of your data.
-As a result, you can find yourself in a world where you can "ask the system anything!" -- you won't need to worry about
-slowing down the front-end machines with complex queries, you won't have to create covering indexes to ask queries,
+As a result, you'll find yourself in a world where you can "ask the system anything!" -- you won't need to worry about
+slowing down the Couchbase Server nodes with complex queries, you won't have to create indexes to explore data,
 and the Analytics query language (SQL++) won't try to keep you from asking queries that would be too perforamance-costly
-to ask against your front-end data.
+to ask against your performance sensitive operational data.
 
 ## The World of Data in Analytics ##
-In this section, you will learn about the Analytics world model for data.
+In this section, you will learn about the Analytics model for data.
 
 ### Organizing Data in Analytics ###
 
 The top-level organizing concept in the Analytics data world is the _dataverse_.
-A dataverse,short for "data universe", is a place (similar to a database or a schema in a relational DBMS)
-in which to create and manage data types, datasets, and other artifacts for a given Analytics application.
-In the Analytics DP, all of the data types that you might need come pre-installed, and the kind of datasets
-that you will create are called "shadow datasets".
-These datasets are containers - collections of JSON objects - that contain real-time shadow copies of selected front-end data.
-When you start using a Analytics instance for the first time, it starts out "empty";
-it contains no data other than the Analytics system catalogs (which live in a special dataverse called the "Metadata" dataverse).
-To store your data in Analytics, you can create a dataverse and then use it to hold the _datasets_ for your own data.
-However, you also get a "default" dataverse for free, and Analytics will just use that if you don't create a new one.
-Let's put these concepts to work.
+A **dataverse**, short for "data universe", is a namespace that gives you a place to create and manage datasets and other artifacts for a given Analytics application. In that respect, a dataverse is similar to a database or a schema in a relational DBMS. To store your data in Analytics, you create a dataverse and then use it to hold the _datasets_ for your own data. We'll get to this next. You get a "Default" dataverse for free, and Analytics will just use that if you don't specify another dataverse.  
 
-Our sample scenario here involves information about beers and their breweries.
-We'll use the "Default" dataverse, to keep things simple, so our first task is to tell Analytics about
-the Couchbase Server data that we want to shadow and the shadow datasets where we want it to live.
-The following Analytics DDL statements show how we can tell Analytics about the "beer-sample" bucket in Couchbase Server,
-where all of the beer and brewery information resides, and ask Analytics to shadow the data using two datasets, breweries and beers.
+**Datasets** are containers that hold collections of JSON objects. They are similar to tables in RDBMS or keyspaces in N1QL. In this tutorial, all of the datasets you create are "**shadow datasets**" that contain real-time synchronized copies of selected data from Couchbase Server.  For shadow datasets, Analytics uses DCP to automatically maintain its own local representations for the JSON documents in the Couchbase Server data nodes.
+ 
+OK, let's put these concepts to work. 
+
+A newly created Analytics instance starts out "empty". That is, it contains no data other than the Analytics system catalogs. These system catalogs live in a special dataverse called the "Metadata" dataverse. Query the Metadata dataverse like so:
+
+    SELECT * FROM Metadata.`Dataverse`;
+    
+The output will resemble this on a freshly installed system:
+
+    {
+	"requestID": "d7ecd3b9-2f2a-4904-93bf-00442d89aedb",
+	"clientContextID": "6ae14356-369f-424c-bd8c-df5543c0bba9",
+	"signature": "*",
+	"results": [ {
+			"Dataverse": {
+				"DataFormat": "org.apache.asterix.runtime.formats.NonTaggedDataFormat",
+				"DataverseName": "Default",
+				"Timestamp": "Tue Nov 01 14:37:33 UTC 2016",
+				"PendingOp": 0
+			}
+		}, {
+			"Dataverse": {
+				"DataFormat": "org.apache.asterix.runtime.formats.NonTaggedDataFormat",
+				"DataverseName": "Metadata",
+				"Timestamp": "Tue Nov 01 14:37:33 UTC 2016",
+				"PendingOp": 0
+			}
+		} ]
+	,
+	"status": "success",
+	"metrics": {
+		"elapsedTime": "1.495209904s",
+		"executionTime": "1.307041088s",
+		"resultCount": "2",
+		"resultSize": "409"
+	    }
+    }
+
+This sample scenario deals with information about beers and breweries, which you'll need to get from Couchbase Server. 
+To keep things simple, use the "Default" dataverse. That means your first task is to tell Analytics about the Couchbase Server data that you want to shadow and the shadow datasets where you want it to live.
+The following Analytics DDL statements show you how to tell Analytics about the "beer-sample" bucket in Couchbase Server,
+where all of the beer and brewery information resides, and ask Analytics to shadow the data using two datasets, `breweries` and `beers`.
 
     CREATE BUCKET beerBucket WITH {"name":"beer-sample","nodes":"127.0.0.1"};
     CREATE SHADOW DATASET breweries ON beerBucket WHERE `type` = "brewery";
     CREATE SHADOW DATASET beers ON beerBucket WHERE `type` = "beer";
 
-The first statement (_CREATE BUCKET_) gives Analytics the information needed to access the data of interest from Couchbase Server.
+The first statement (_CREATE BUCKET_) gives Analytics the information it needs to access the data of interest from Couchbase Server.
 The next two statements (_CREATE SHADOW DATASET_) create the target datasets in Analytics for the information of interest.
-Notice how _WHERE_ clauses are utilized to direct beer-related data into separate, type-specific datasets for easier querying.
-Each of these datasets will be hash-partitioned (shared) across all of the nodes running instances of the Analytics service.
-To initiate the shadowing relationship of these datasets to the front-end data, one more step is needed, namely:
+Notice how _WHERE_ clauses are utilized to direct beer- and brewery-related data into separate, type-specific datasets for easier querying. Each of these datasets will be hash-partitioned (shared) across all of the nodes running instances of the Analytics service.
+This partitioning sets the stage for the parallel processing that Analytics employs when processing analytical queries.
+
+To actually initiate the shadowing relationship of these datasets to the data in Couchbase Server, one more step is needed, namely:
 
     CONNECT BUCKET beerBucket WITH {"password":""};
 
-> **Note:** The Developer Preview saves the username and password for Couchbase Server as plain text in the clear.
+> **Note:** The Developer Preview saves the username and password for Couchbase Server as plain text in the clear. 
 
-Once you have run this statement, Analytics will begin making its copy of the front-end data and continuously monitor it for changes.
+Once you run this statement, Analytics begins making its copy of the Couchbase Server documents and continuously monitors it for changes.
 
 ### What's Lurking in the Shadows? ###
 
-The next thing you will probably want to do is to verify that your shadow datasets are really there and being populated.
+Next, verify that your shadow datasets are really there and being populated.
 The following SQL++ _SELECT_ statements are one good way to accomplish that:
 
     SELECT VALUE ds FROM Metadata.`Dataset` ds WHERE ds.DataverseName = "Default";
@@ -83,6 +110,8 @@ The following SQL++ _SELECT_ statements are one good way to accomplish that:
 
     SELECT VALUE COUNT(*) FROM beers;
     SELECT * FROM beers ORDER BY name LIMIT 1;
+
+Notice anything funny here? Analytics can accept mutli-statement inputs and executes them as a batch, which is something new if you're coming from N1QL. Let's take a look at the returns one at a time.
 
 The first statement above looks in the Analytics system catalogs for datasets that have been created in the "Default" dataverse.
 At this point, assuming that you are just getting started, you will see only your two new shadow datasets:
@@ -186,7 +215,11 @@ At this point, assuming that you are just getting started, you will see only you
 The next two pairs of SQL++ statements above ask Analytics to give you record counts and a sample record from each of the shadow datasets.
 The four resulting return values should be as follows:
 
+Result 1
+
     [ 1412 ]
+
+Result 2
 
     [ {
         "breweries": {
@@ -211,7 +244,11 @@ The four resulting return values should be as follows:
         }
     } ]
 
+Result 3
+
     [ 5891 ]
+
+Result 4
 
     [ {
         "beers": {
@@ -233,8 +270,13 @@ The four resulting return values should be as follows:
 ## SQL++: Querying Your Analytics Data ##
 
 Congratulations! You now have your Couchbase Server beer-related data being shadowed in Analytics.
-You can start running ad hoc queries against your breweries and beers datasets.
+You're ready to start running ad hoc queries against your breweries and beers datasets.
 
+To do this, you'll program Analytics using the SQL++ query language, a SQL-inspired language designed for working with semistructured data. SQL++ has much in common with SQL, but there are a few differences due to the data model that SQL++ is designed to serve. SQL was designed in the 1970's to interact with the flat, schema-ified world of relational databases. SQL++ is designed for the nested, schema-less (or schema-optional, in Analytics) world of NoSQL systems. SQL++ offers experienced SQL users a mostly familiar paradigm for querying and manipulating data in Analytics. SQL++ is closely related to N1QL, the current query language used in Couchbase Server. SQL++ is really a functional superset of N1QL that is a bit closer to SQL, and the differences between N1QL and SQL++ will eventually disappear in future releases.
+
+In this section we introduce SQL++ via a set of example queries with their expected results, based on the data above, to help you get started. Many of the most important features of SQL++ are presented in this set of representative queries. 
+
+For even more on the query language, see [SQL++ Language Reference](1_intro.html) with a complete list of built-in functions in the [Function Reference](function-ref.html).
 Analytics supports the SQL++ query language, and it is a
 SQL-inspired language designed for working with semistructured data.
 SQL++ has much in common with SQL, but there are differences due to the data model that SQL++ is designed to serve.
@@ -253,10 +295,14 @@ For more details, see
 and a complete list of the built-in functions is available in the [Function Reference](function-ref.html).
 
 SQL++ is a highly composable expression language.
-Even the very simple expression "1+1;" is a valid SQL++ query that evaluates to 2.
-(Try it for yourself!)
+Even the very simple expression `"1+1;"` is a valid SQL++ query that evaluates to `2`.
+Try it for yourself!
 
-Let's go ahead and try writing some queries and see about learning SQL++ through examples.
+It's worth noting that each time you execute a SQL++ query, the Analytics query engine employs state-of-the-art 
+parallel processing algorithms similar to those used by the parallel relational DBMSs that power many 
+enterprise data warehouses. Unlike those systems, Analytics also works on rich, flexible schema data.
+
+Let's go ahead and write some queries and start learning SQL++ through examples.
 
 ### Query 0 - Key-Based Lookup ###
 For our first query, let's find a particular brewery based on its Couchbase Server key.
@@ -493,11 +539,11 @@ The expected result for this query is as follows:
 ```
 ### Query 3 (and friends) - Equijoin ###
 In addition to simply binding variables to data instances and returning them "whole",
-an SQL++ query can construct new records to return based on combinations of variable bindings.
+a SQL++ query can construct new records to return based on combinations of variable bindings.
 This gives SQL++ the power to do projections and joins much like those done using multi-table _FROM_ clauses in SQL.
 For example, if we wanted a list of all breweries paired with their associated beers,
 with the list enumerating the brewery name and the beer name for each such pair.
-We can do this as follows in SQL++ (which also limits the answer set size to at most 20 results):
+We can do this as follows in SQL++, while also limiting the answer set size to at most 20 results:
 
     SELECT bw.name AS brewer, br.name AS beer
     FROM breweries bw, beers br
@@ -510,6 +556,10 @@ Each instance in the result will be a record containing two fields, "brewer" and
 containing the brewery's name and the beer's name, respectively, for each brewery/beer pair.
 Notice how the use of a SQL-style _SELECT_ clause, as opposed to the new SQL++ _SELECT VALUE_
 clause, automatically results in the construction of a new record value for each result.
+
+One interesting thing about this query is that it is evaluated using hash-based parallel join processing, which 
+can fully leverage all available nodes for query processing. This becomes a necessity when running expensive
+queries at scale.
 
 The expected result of this example SQL++ join query is shown below:
 
@@ -1325,7 +1375,7 @@ The expected result of this version of the SQL++ join query for our sample data 
         }
     } ]
 
-Die-hard SQL _JOIN_-_ON_ clause syntax fans will be happy to know that SQL++ hasn't forgotten them,
+Die-hard SQL _JOIN ON_ clause syntax fans will be happy to know that SQL++ hasn't forgotten them,
 so a result identical to the one immediately above can also be produced as follows:
 
     SELECT *
@@ -1378,7 +1428,7 @@ field with a nested collection of records containing the beer name and alcohol p
 The nested collection field for each brewery is created using a correlated subquery.
 > **Note:** While it looks like nested loops could be involved in computing the result,
 Analytics recognizes the equivalence of such a query to an outerjoin, so it will use an
-efficient parallel join strategy when actually computing the query's result.)
+efficient parallel join strategy when actually computing the query's result.
 
 Below is this example query's expected output:
 
@@ -2094,7 +2144,7 @@ Below is the expected result for this query over the sample data:
     } ]
 
 Analytics has multiple evaluation strategies available for processing grouped aggregate queries.
-For grouped aggregation, the system knows how to employ both sort-based and hash-based aggregation methods,
+For grouped aggregation, the system knows how to employ both sort-based and hash-based parallel aggregation methods,
 with sort-based methods being used by default and a hint being available to suggest that a different approach
 (hashing) be used in processing a particular SQL++ query.
 
@@ -2192,7 +2242,7 @@ The expected result for this query is:
 So far we have been walking through the SQL++ query capabilities of Analytics.
 What really makes Analytics interesting, however, is that it brings this query power to bear on your nearly-current Couchbase Server
 data, enabling you to harness the power of parallelism in Analytics to analyze what's going on with your data "up front" in essentially
-real time, without perturbing your front-end applications' performance (or the resulting front-end user experience).
+real time, without perturbing your Couchbase Server applications' performance (or the resulting end user experience).
 Before closing this tutorial, let's take a very quick look at that aspect of Analytics.
 
 To start, the following SQL++ query lists all of the Kona Brewery's current beer offerings:
@@ -2311,7 +2361,7 @@ The result of this query is a list of the following seven beers:
     } ]
 
 To illustrate Analytics in action, suppose that Kona's marketing department determines that a light beer is needed.
-You can use your favorite Couchbase Server interface to modify the front-end server's beer-sample content accordingly, for example:
+You can use your favorite Couchbase Server interface to modify the server's beer-sample content accordingly, for example:
 
     INSERT INTO `beer-sample` ( KEY, VALUE )
       VALUES
@@ -2462,11 +2512,11 @@ shadowed in Analytics as well.
 
 ## Further Help ##
 That's it! You are now armed and dangerous with respect to semistructured data management using Analytics via SQL++.
-For more information, see
-[SQL++ Language Reference](1_intro.html),
-and a complete list of the built-in functions is available in the [Function Reference](function-ref.html).
+For more information, see [SQL++ Language Reference](1_intro.html), or consult the complete list of built-in functions 
+in the [Function Reference](function-ref.html).
 
-Analytics is a powerful new NoSQL analytics capbability; we hope that you'll find it useful in exploring and analyzing your
-Couchbase Server data without having to worry about front-end impact or doing ETL stunts to make your analyses possible.
+Couchbase Analytics lets you bring a powerful new NoSQL parallel query engine to bear on your data, using the latest state of the art parallel query processing techniques under the hood. We hope you find it useful in exploring and analyzing your Couchbase Server data - without having to worry about end user impact or doing ETL grunt work to make your analyses possible.
+
 Use it wisely, and remember: "With great power comes great responsibility..." :-)
+
 Do let us know how you like it...!
