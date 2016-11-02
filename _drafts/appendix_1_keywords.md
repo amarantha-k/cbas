@@ -4,9 +4,8 @@ title: Appendix 1 Reserved Keywords and Characters
 ---
 Identifiers starting with the underscore (_) character, must be escaped by enclosing them inside backticks (`).
 
-For example,
-    SELECT COUNT(`_id`) AS COUNT_EMPLOYEE
-    FROM default_shadow;
+For example,```SELECT COUNT(`_id`) AS COUNT_EMPLOYEE
+    FROM default_shadow;```
 
 All reserved keywords are listed in the following table:
 
@@ -36,14 +35,15 @@ All reserved keywords are listed in the following table:
    <TD>CONNECT</TD>
    </TR>
    <TR>
+   <TD>CONNECTED</TD>
    <TD>CORRELATE </TD>
    <TD>COLLECTION</TD>
    <TD>DATASET</TD>
    <TD>DATAVERSE</TD>
    <TD>DECLARE</TD>
-   <TD>DEFINITION</TD>
    </TR>
    <TR>
+   <TD>DEFINITION</TD>
    <TD>DECLARE </TD>
    <TD>DEFINITION</TD>
    <TD>DELETE</TD>
