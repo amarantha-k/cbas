@@ -41,11 +41,11 @@ A **dataverse**, short for data universe, is a namespace that gives you a place 
 
 OK, let's put these concepts to work.
 
-A newly created Analytics instance starts out *empty*. That is, it contains no data other than the Analytics system catalogs. These system catalogs live in a special dataverse called the **Metadata** dataverse. Query the Metadata dataverse like so:
+A newly created Analytics instance starts out *empty*. That is, it contains no data other than the Analytics system catalogs. These system catalogs live in a special dataverse called the **Metadata** dataverse. Query the Metadata dataverse as shown below:
 
     SELECT * FROM Metadata.`Dataverse`;
 
-The output will resemble this on a freshly installed system:
+The output will resemble like below on a freshly installed system:
 
     {
 	"requestID": "d7ecd3b9-2f2a-4904-93bf-00442d89aedb",
@@ -76,7 +76,7 @@ The output will resemble this on a freshly installed system:
 	    }
     }
 
-This sample scenario deals with information about beers and breweries, which you'll need to get from Couchbase Server.
+This sample scenario deals with the information about beers and breweries, which you'll need to get from Couchbase Server.
 To keep things simple, use the *Default* dataverse. That means your first task is to tell Analytics about the Couchbase Server data that you want to shadow and the shadow datasets where you want it to live.
 The following Analytics DDL statements show you how to tell Analytics about the *beer-sample* bucket in Couchbase Server,
 where all of the beer and brewery information resides, and ask Analytics to shadow the data using two datasets, `breweries` and `beers`.
