@@ -179,12 +179,13 @@ Operators perform a specific operation on the input values or expressions. The s
                            | OperatorExpression Operator (OperatorExpression)?
                            | OperatorExpression <BETWEEN> OperatorExpression <AND> OperatorExpression
 
-SQL++ provides a full set of operators that you can use within its statements. The categories of operators are given below:
+SQL++ provides a full set of operators that you can use within its statements. The categories of operators are follows:
 
 - [Arithmetic Operators](#Arithmetic_operators) - to perform basic mathematical operations
 - [Collection Operators](#Collection_operators) - to evaluate expressions on collections or objects
 - [Comparison Operators](#Comparison_operators) - to compare two expressions
 - [Logical Operators](#Logical_operators) - to combine operators using Boolean logic
+
 
 The following table summarizes the precedence order (from higher to lower) of the major unary and binary operators:
 
@@ -227,11 +228,11 @@ Collection operators are used for membership tests (IN, NOT IN) or empty collect
 Comparison operators are used to compare values. The comparison operators fall into one of two sub-categories: missing value comparisons and regular value comparisons. SQL++ (and JSON) has two ways of representing missing information in a record - the presence of the field with a NULL for its value (as in SQL), and the absence of the field (which JSON permits). In the following example, the first of the following records represents Jack, whose friend is Jill. In the other examples, Jake is friendless a la SQL, with a friend field that is NULL, while Joe is friendless in a more natural (for JSON) way, that is, without a friend field.
 
 ##### Examples
-  {"name": "Jack", "friend": "Jill"}
+  ```{"name": "Jack", "friend": "Jill"}```
 
-  {"name": "Jake", "friend": NULL}
+  ```{"name": "Jake", "friend": NULL}```
 
-  {"name": "Joe"}
+  ```{"name": "Joe"}```
 
 The following table enumerates all SQL++ comparison operators.
 
@@ -321,7 +322,7 @@ Quantified expressions are used for expressing existential or universal predicat
 
 The following pair of examples illustrate the use of a quantified expression to test that every (or some) element in the set [1, 2, 3] of integers is less than three. The first example yields `FALSE` and second example yields `TRUE`.
 
-Please note that if the set are instead the empty set, the first expression yields `TRUE` ("every" value in an empty set satisfies the condition) while the second expression yields `FALSE` (since there isn't "some" value, as there are no values in the set, that satisfies the condition).
+Note that if the set are instead the empty set, the first expression yields `TRUE` (*every* value in an empty set satisfies the condition) while the second expression yields `FALSE` (since there isn't *some* value, as there are no values in the set, that satisfies the condition).
 
 ##### Examples
 
