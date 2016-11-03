@@ -271,23 +271,20 @@ Result 4
 
 Congratulations! You now have your Couchbase Server beer-related data being shadowed in Analytics.
 You're ready to start running ad hoc queries against your breweries and beers datasets.
-
-To do this, you'll program Analytics using the SQL++ query language, a SQL-inspired language designed for working with semistructured data. SQL++ has much in common with SQL, but there are a few differences due to the data model that SQL++ is designed to serve. SQL was designed in the 1970's to interact with the flat, schema-ified world of relational databases. SQL++ is designed for the nested, schema-less (or schema-optional, in Analytics) world of NoSQL systems. SQL++ offers experienced SQL users a mostly familiar paradigm for querying and manipulating data in Analytics. SQL++ is closely related to N1QL, the current query language used in Couchbase Server. SQL++ is really a functional superset of N1QL that is a bit closer to SQL, and the differences between N1QL and SQL++ will eventually disappear in future releases.
+To do this, you'll program Analytics using the SQL++ query language, a SQL-inspired language designed for working with semistructured data.
 
 In this section, we introduce SQL++ via a set of example queries with their expected results, based on the data above, to help you get started. Many of the most important features of SQL++ are presented in this set of representative queries.
-
 For more information on the query language, see [SQL++ Language Reference](1_intro.html) with a complete list of built-in functions in the [Function Reference](function-ref.html).
+
 Analytics supports the SQL++ query language, and it is a
 SQL-inspired language designed for working with semistructured data.
-- SQL++ has much in common with SQL, but there are differences due to the data model that SQL++ is designed to serve.
-- SQL was designed in the 1970's to interact with the flat, schema-ified world of relational databases.
+- SQL++ has much in common with SQL, but there are differences due to the data model that SQL++ is designed to serve. SQL was designed in the 1970's to interact with the flat, schema-ified world of relational databases.
 - SQL++ is designed for the nested, schema-less (or schema-optional, in Analytics) world of NoSQL systems.
 - SQL++ offers a mostly familiar paradigm for experienced SQL users to use to query and manipulate data in Analytics.
 - SQL++ is also related to N1QL, the current query language used in Couchbase Server.
 - SQL++ is really a functional superset of N1QL that is a bit closer to SQL,
 and the differences between N1QL and SQL++ will eventually disappear (that is, SQL++ is really the future of N1QL).
-
-SQL++ is a highly composable expression language.
+- SQL++ is a highly composable expression language.
 Even the very simple expression `"1+1;"` is a valid SQL++ query that evaluates to `2`.
 Try it for yourself!
 
