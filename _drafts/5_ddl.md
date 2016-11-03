@@ -2,6 +2,7 @@
 layout: default
 title: Data Definition Language (DDL)
 ---
+This section lists all supported DDL statements in Couchbase Analytics.
 
 ## <a id="Statements">Statements</a>
 

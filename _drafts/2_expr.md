@@ -21,10 +21,11 @@ title: Expressions
  ! specific language governing permissions and limitations
  ! under the License.
  !-->
+SQL++ is a highly composable expression language. Each SQL++ expression returns zero or more data model instances.
 
     Expression ::= OperatorExpression | CaseExpression | QuantifiedExpression
 
-SQL++ is a highly composable expression language. Each SQL++ expression returns zero or more data model instances. There are three major types of expressions in SQL++. At the topmost level, a SQL++ expression can be an OperatorExpression (similar to a mathematical expression), a ConditionalExpression (to choose between alternative values), or a QuantifiedExpression (which yields a boolean value). Each type is explained below as we explore the full SQL++ grammar.
+There are three major types of expressions in SQL++. At the topmost level, a SQL++ expression can be an OperatorExpression (similar to a mathematical expression), a ConditionalExpression (to choose between alternative values), or a QuantifiedExpression (which yields a boolean value). Each type is explained below for the full SQL++ grammar.
 
 ## <a id="Primary_expressions">Primary Expressions</a>
 
