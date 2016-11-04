@@ -191,17 +191,17 @@ The following table summarizes the precedence order (from higher to lower) of th
 
 | Operator                                                                    | Operation |
 |-----------------------------------------------------------------------------|-----------|
-| EXISTS, NOT EXISTS                                                          |  collection emptiness testing |
-| ^                                                                           |  exponentiation  |
-| *, /                                                                        |  multiplication, division |
-| +, -                                                                        |  addition, subtraction  |
-| &#124;&#124;                                                                          |  string concatenation |
-| IS NULL, IS NOT NULL, IS MISSING, IS NOT MISSING, <br/>IS UNKNOWN, IS NOT UNKNOWN| unknown value comparison |
-| BETWEEN, NOT BETWEEN                                                        | range comparison (inclusive on both sides) |
-| =, !=, <, >, <=, >=, LIKE, NOT LIKE, IN, NOT IN                             | comparison  |
-| NOT                                                                         | logical negation |
-| AND                                                                         | conjunction |
-| OR                                                                          | disjunction |
+| EXISTS, NOT EXISTS                                                          |  Collection emptiness testing |
+| ^                                                                           |  Exponentiation  |
+| *, /                                                                        |  Multiplication, Division |
+| +, -                                                                        |  Addition, Subtraction  |
+| &#124;&#124;                                                                          |  String concatenation |
+| IS NULL, IS NOT NULL, IS MISSING, IS NOT MISSING, <br/>IS UNKNOWN, IS NOT UNKNOWN| Unknown value comparison |
+| BETWEEN, NOT BETWEEN                                                        | Range comparison (inclusive on both sides) |
+| =, !=, <, >, <=, >=, LIKE, NOT LIKE, IN, NOT IN                             | Comparison  |
+| NOT                                                                         | Logical negation |
+| AND                                                                         | Conjunction |
+| OR                                                                          | Disjunction |
 
 ### <a id="Arithmetic_operators">Arithmetic Operators</a>
 Arithmetic operators are used to exponentiate, add, subtract, multiply, and divide numeric values, or concatenate string values.
