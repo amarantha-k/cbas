@@ -179,7 +179,7 @@ Operators perform a specific operation on the input values or expressions. The s
                            | OperatorExpression Operator (OperatorExpression)?
                            | OperatorExpression <BETWEEN> OperatorExpression <AND> OperatorExpression
 
-SQL++ provides a full set of operators that you can use within its statements. The categories of operators are follows:
+SQL++ provides a full set of operators that you can use within its statements. The categories of operators are given below:
 
 - [Arithmetic Operators](#Arithmetic_operators) - to perform basic mathematical operations
 - [Collection Operators](#Collection_operators) - to evaluate expressions on collections or objects
