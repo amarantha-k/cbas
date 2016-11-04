@@ -322,7 +322,7 @@ Quantified expressions are used for expressing existential or universal predicat
 
 The following pair of examples illustrate the use of a quantified expression to test that every (or some) element in the set [1, 2, 3] of integers is less than three. The first example yields `FALSE` and second example yields `TRUE`.
 
-Note that if the set are instead the empty set, the first expression yields `TRUE` (*every* value in an empty set satisfies the condition) while the second expression yields `FALSE` (since there isn't *some* value, as there are no values in the set, that satisfies the condition).
+Note that if the set is instead the empty set, the first expression yields `TRUE` (*every* value in an empty set satisfies the condition) while the second expression yields `FALSE` (since there isn't *some* value, as there are no values in the set, that satisfies the condition).
 
 ##### Examples
 
